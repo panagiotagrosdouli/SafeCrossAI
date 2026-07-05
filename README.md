@@ -21,6 +21,36 @@ The long-term objective is to move beyond single-agent trajectory prediction and
 
 **How can an intelligent intersection use infrastructure-based perception and AI to predict the motion of vulnerable road users and prevent safety-critical conflicts with connected and autonomous vehicles?**
 
+## Current Stage
+
+SafeCrossAI now includes a first Stage 1 baseline pipeline:
+
+```text
+synthetic crossing sample -> constant-velocity prediction -> ADE/FDE evaluation
+```
+
+This validates the repository structure before integrating real trajectory datasets.
+
+## Quick Start
+
+```bash
+git clone https://github.com/panagiotagrosdouli/SafeCrossAI.git
+cd SafeCrossAI
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .[dev]
+pytest
+```
+
+Minimal Python usage:
+
+```python
+from safecrossai.experiments.baseline_experiment import run_constant_velocity_baseline
+
+result = run_constant_velocity_baseline()
+print(result)
+```
+
 ## Main Research Directions
 
 ### 1. Infrastructure-Based Perception
