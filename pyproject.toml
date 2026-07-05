@@ -1,0 +1,53 @@
+[project]
+name = "safecrossai"
+version = "0.1.0"
+description = "AI-powered intelligent intersection platform for vulnerable road user trajectory prediction and road safety research."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "Panagiota Grosdouli"}
+]
+license = {text = "MIT"}
+keywords = [
+    "trajectory-prediction",
+    "vulnerable-road-users",
+    "smart-intersections",
+    "autonomous-driving",
+    "road-safety",
+    "intelligent-transportation-systems"
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.7",
+    "tqdm>=4.66",
+    "pyyaml>=6.0",
+    "torch>=2.1"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.4",
+    "mypy>=1.8",
+    "jupyter>=1.0"
+]
+vision = [
+    "opencv-python>=4.8"
+]
+graph = [
+    "torch-geometric>=2.5"
+]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
