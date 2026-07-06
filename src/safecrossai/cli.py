@@ -7,6 +7,7 @@ from pathlib import Path
 
 from safecrossai.benchmark.comparison import compare_constant_velocity_and_lstm
 from safecrossai.benchmark.report import benchmark_rows_to_markdown
+from safecrossai.datasets.ind.samples import build_ind_samples
 from safecrossai.datasets.toy import make_linear_crossing_sample
 from safecrossai.experiments.baseline_experiment import run_constant_velocity_baseline
 from safecrossai.experiments.csv_baseline_experiment import run_csv_constant_velocity_baseline
@@ -42,6 +43,17 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_parser.add_argument("--lstm-epochs", type=int, default=1)
     benchmark_parser.add_argument("--hidden-dim", type=int, default=8)
 
+    ind_parser = subparsers.add_parser(
+        "ind-benchmark",
+        help="Compare constant velocity and LSTM on an inD-style tracks CSV file.",
+    )
+    ind_parser.add_argument("path", type=Path, help="Path to inD-style tracks CSV file.")
+    ind_parser.add_argument("--observation-steps", type=int, default=8)
+    ind_parser.add_argument("--prediction-steps", type=int, default=12)
+    ind_parser.add_argument("--lstm-epochs", type=int, default=1)
+    ind_parser.add_argument("--hidden-dim", type=int, default=8)
+    ind_parser.add_argument("--max-samples", type=int, default=32)
+
     return parser
 
 
@@ -75,6 +87,22 @@ def main() -> None:
         )
         rows = compare_constant_velocity_and_lstm(
             [sample],
+            lstm_epochs=args.lstm_epochs,
+            hidden_dim=args.hidden_dim,
+        )
+        print(benchmark_rows_to_markdown(rows))
+        return
+
+    if args.command == "ind-benchmark":
+        samples = build_ind_samples(
+            args.path,
+            observation_steps=args.observation_steps,
+            prediction_steps=args.prediction_steps,
+        )
+        if args.max_samples > 0:
+            samples = samples[: args.max_samples]
+        rows = compare_constant_velocity_and_lstm(
+            samples,
             lstm_epochs=args.lstm_epochs,
             hidden_dim=args.hidden_dim,
         )
