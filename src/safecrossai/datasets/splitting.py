@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import random
-from typing import TypeVar
+from typing import Generic, TypeVar
 
 T = TypeVar("T")
 
 
 @dataclass(frozen=True)
-class SampleSplit[T]:
+class SampleSplit(Generic[T]):
     """Train/test split for trajectory samples."""
 
     train: list[T]
