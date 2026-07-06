@@ -12,6 +12,7 @@ from .geometry import (
     relative_position,
     relative_velocity,
 )
+from .graph import InteractionEdge, InteractionGraph, build_radius_interaction_graph
 from .neighbors import Neighbor, SocialAgent, find_neighbors, k_nearest_neighbors
 from .ttc import ClosestApproach, closest_point_of_approach, time_to_collision
 
@@ -21,6 +22,9 @@ __all__ = [
     "heading",
     "relative_position",
     "relative_velocity",
+    "InteractionEdge",
+    "InteractionGraph",
+    "build_radius_interaction_graph",
     "Neighbor",
     "SocialAgent",
     "find_neighbors",
