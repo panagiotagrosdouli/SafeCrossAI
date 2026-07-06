@@ -122,6 +122,38 @@ print(graph.nodes)
 print(graph.edges)
 ```
 
+## Unified Scene Representation
+
+A `Scene` stores agents, timestamp, scene id, and metadata in a common format that future models can share.
+
+```python
+import numpy as np
+
+from safecrossai.social import SocialAgent, make_scene
+
+scene = make_scene(
+    scene_id="intersection_001",
+    timestamp=12.5,
+    agents=[
+        SocialAgent(
+            agent_id="pedestrian_1",
+            position=np.array([0.0, 0.0]),
+            velocity=np.array([1.0, 0.0]),
+        ),
+        SocialAgent(
+            agent_id="cyclist_1",
+            position=np.array([2.0, 0.0]),
+            velocity=np.array([0.0, 0.0]),
+        ),
+    ],
+    metadata={"location": "smart_intersection_a"},
+)
+
+graph = scene.build_interaction_graph(radius=5.0)
+print(scene.agent_ids())
+print(graph.edges)
+```
+
 ## Research Role
 
 The social interaction layer is the bridge between trajectory prediction and road-safety reasoning. It provides the primitives needed for:
@@ -130,4 +162,5 @@ The social interaction layer is the bridge between trajectory prediction and roa
 - social pooling,
 - graph construction,
 - collision-risk estimation,
-- infrastructure-assisted prediction at smart intersections.
+- infrastructure-assisted prediction at smart intersections,
+- unified scene inputs for future Social-LSTM, GNN, Transformer, and Diffusion models.
