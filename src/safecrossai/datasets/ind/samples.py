@@ -12,8 +12,22 @@ def build_ind_samples(
     path: str | Path,
     observation_steps: int = 8,
     prediction_steps: int = 12,
+    classes: set[str] | None = None,
 ) -> list[TrajectorySample]:
-    """Build trajectory samples from an inD-style tracks CSV file."""
+    """Build trajectory samples from an inD-style tracks CSV file.
+
+    Parameters
+    ----------
+    path:
+        Path to an inD-style tracks CSV file.
+    observation_steps:
+        Number of observed positions.
+    prediction_steps:
+        Number of future positions.
+    classes:
+        Optional set of allowed agent classes. When provided, tracks whose
+        class is not in the set are skipped.
+    """
     if observation_steps < 2:
         raise ValueError("observation_steps must be at least 2")
     if prediction_steps < 1:
@@ -28,8 +42,11 @@ def build_ind_samples(
         if len(group) < window:
             continue
 
-        positions = group[["xCenter", "yCenter"]].to_numpy(dtype=float)
         agent_type = str(group["class"].iloc[0]) if "class" in group else "unknown"
+        if classes is not None and agent_type not in classes:
+            continue
+
+        positions = group[["xCenter", "yCenter"]].to_numpy(dtype=float)
 
         for start in range(0, len(positions) - window + 1):
             segment = positions[start : start + window]
