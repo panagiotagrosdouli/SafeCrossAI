@@ -13,6 +13,7 @@ from .geometry import (
     relative_velocity,
 )
 from .neighbors import Neighbor, SocialAgent, find_neighbors, k_nearest_neighbors
+from .ttc import ClosestApproach, closest_point_of_approach, time_to_collision
 
 __all__ = [
     "bearing",
@@ -24,4 +25,7 @@ __all__ = [
     "SocialAgent",
     "find_neighbors",
     "k_nearest_neighbors",
+    "ClosestApproach",
+    "closest_point_of_approach",
+    "time_to_collision",
 ]
