@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from safecrossai.benchmark.comparison import BenchmarkRow
+from safecrossai.benchmark.report import benchmark_rows_to_markdown
 
 
 def export_benchmark_csv(rows: list[BenchmarkRow], path: str | Path) -> None:
@@ -49,3 +50,13 @@ def export_benchmark_json(rows: list[BenchmarkRow], path: str | Path) -> None:
         for row in rows
     ]
     output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def export_benchmark_markdown(rows: list[BenchmarkRow], path: str | Path) -> None:
+    """Export benchmark rows to a Markdown table."""
+    if not rows:
+        raise ValueError("rows must not be empty")
+
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(benchmark_rows_to_markdown(rows) + "\n", encoding="utf-8")
