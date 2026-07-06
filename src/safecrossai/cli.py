@@ -9,7 +9,11 @@ from safecrossai.benchmark.comparison import (
     compare_constant_velocity_and_lstm,
     compare_with_train_test_split,
 )
-from safecrossai.benchmark.export import export_benchmark_csv, export_benchmark_json
+from safecrossai.benchmark.export import (
+    export_benchmark_csv,
+    export_benchmark_json,
+    export_benchmark_markdown,
+)
 from safecrossai.benchmark.report import benchmark_rows_to_markdown
 from safecrossai.datasets.ind.samples import build_ind_samples
 from safecrossai.datasets.toy import make_linear_crossing_sample
@@ -48,6 +52,7 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark_parser.add_argument("--hidden-dim", type=int, default=8)
     benchmark_parser.add_argument("--output-csv", type=Path, default=None)
     benchmark_parser.add_argument("--output-json", type=Path, default=None)
+    benchmark_parser.add_argument("--output-md", type=Path, default=None)
 
     ind_parser = subparsers.add_parser(
         "ind-benchmark",
@@ -64,6 +69,7 @@ def build_parser() -> argparse.ArgumentParser:
     ind_parser.add_argument("--seed", type=int, default=42)
     ind_parser.add_argument("--output-csv", type=Path, default=None)
     ind_parser.add_argument("--output-json", type=Path, default=None)
+    ind_parser.add_argument("--output-md", type=Path, default=None)
     ind_parser.add_argument(
         "--classes",
         nargs="*",
@@ -107,7 +113,7 @@ def main() -> None:
             lstm_epochs=args.lstm_epochs,
             hidden_dim=args.hidden_dim,
         )
-        _export_rows(rows, args.output_csv, args.output_json)
+        _export_rows(rows, args.output_csv, args.output_json, args.output_md)
         print(benchmark_rows_to_markdown(rows))
         return
 
@@ -135,18 +141,25 @@ def main() -> None:
                 lstm_epochs=args.lstm_epochs,
                 hidden_dim=args.hidden_dim,
             )
-        _export_rows(rows, args.output_csv, args.output_json)
+        _export_rows(rows, args.output_csv, args.output_json, args.output_md)
         print(benchmark_rows_to_markdown(rows))
         return
 
     parser.error(f"unknown command: {args.command}")
 
 
-def _export_rows(rows, output_csv: Path | None, output_json: Path | None) -> None:
+def _export_rows(
+    rows,
+    output_csv: Path | None,
+    output_json: Path | None,
+    output_md: Path | None,
+) -> None:
     if output_csv is not None:
         export_benchmark_csv(rows, output_csv)
     if output_json is not None:
         export_benchmark_json(rows, output_json)
+    if output_md is not None:
+        export_benchmark_markdown(rows, output_md)
 
 
 if __name__ == "__main__":
