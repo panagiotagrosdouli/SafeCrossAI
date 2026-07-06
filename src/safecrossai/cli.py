@@ -7,6 +7,7 @@ from pathlib import Path
 
 from safecrossai.benchmark.comparison import (
     compare_constant_velocity_and_lstm,
+    compare_with_grouped_train_test_split,
     compare_with_train_test_split,
 )
 from safecrossai.benchmark.export import (
@@ -66,6 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
     ind_parser.add_argument("--hidden-dim", type=int, default=8)
     ind_parser.add_argument("--max-samples", type=int, default=32)
     ind_parser.add_argument("--train-test", action="store_true")
+    ind_parser.add_argument("--grouped-split", action="store_true")
     ind_parser.add_argument("--test-fraction", type=float, default=0.2)
     ind_parser.add_argument("--seed", type=int, default=42)
     ind_parser.add_argument("--output-csv", type=Path, default=None)
@@ -137,8 +139,17 @@ def main() -> None:
         )
         if args.max_samples > 0:
             samples = samples[: args.max_samples]
-        protocol = "train_test" if args.train_test else "same_samples"
-        if args.train_test:
+        if args.grouped_split:
+            protocol = "grouped_train_test"
+            rows = compare_with_grouped_train_test_split(
+                samples,
+                test_fraction=args.test_fraction,
+                seed=args.seed,
+                lstm_epochs=args.lstm_epochs,
+                hidden_dim=args.hidden_dim,
+            )
+        elif args.train_test:
+            protocol = "train_test"
             rows = compare_with_train_test_split(
                 samples,
                 test_fraction=args.test_fraction,
@@ -147,6 +158,7 @@ def main() -> None:
                 hidden_dim=args.hidden_dim,
             )
         else:
+            protocol = "same_samples"
             rows = compare_constant_velocity_and_lstm(
                 samples,
                 lstm_epochs=args.lstm_epochs,
@@ -161,8 +173,8 @@ def main() -> None:
             hidden_dim=args.hidden_dim,
             samples=len(samples),
             classes=sorted(classes) if classes is not None else None,
-            test_fraction=args.test_fraction if args.train_test else None,
-            seed=args.seed if args.train_test else None,
+            test_fraction=args.test_fraction if (args.train_test or args.grouped_split) else None,
+            seed=args.seed if (args.train_test or args.grouped_split) else None,
         )
         _export_rows(rows, args.output_csv, args.output_json, args.output_md, metadata)
         print(benchmark_rows_to_markdown(rows))
