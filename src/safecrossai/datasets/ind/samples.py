@@ -37,7 +37,7 @@ def build_ind_samples(
     window = observation_steps + prediction_steps
     samples: list[TrajectorySample] = []
 
-    for _, group in data.groupby("trackId"):
+    for track_id, group in data.groupby("trackId"):
         group = group.sort_values("frame")
         if len(group) < window:
             continue
@@ -47,6 +47,7 @@ def build_ind_samples(
             continue
 
         positions = group[["xCenter", "yCenter"]].to_numpy(dtype=float)
+        group_id = f"track:{track_id}"
 
         for start in range(0, len(positions) - window + 1):
             segment = positions[start : start + window]
@@ -55,6 +56,7 @@ def build_ind_samples(
                     observed=segment[:observation_steps],
                     future=segment[observation_steps:],
                     agent_type=agent_type,
+                    group_id=group_id,
                 )
             )
 
