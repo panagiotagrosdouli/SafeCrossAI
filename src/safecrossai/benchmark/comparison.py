@@ -11,6 +11,8 @@ from safecrossai.evaluation.metrics import average_displacement_error, final_dis
 from safecrossai.prediction.baseline import constant_velocity_predict
 from safecrossai.training.loops import fit_lstm_baseline
 
+_NEAR_ZERO_TOLERANCE = 1e-12
+
 
 @dataclass(frozen=True)
 class BenchmarkRow:
@@ -38,9 +40,16 @@ def evaluate_constant_velocity(samples: list[TrajectorySample]) -> BenchmarkRow:
     return BenchmarkRow(
         model="constant_velocity",
         samples=len(samples),
-        mean_ade=sum(ade_values) / len(ade_values),
-        mean_fde=sum(fde_values) / len(fde_values),
+        mean_ade=_clamp_near_zero(sum(ade_values) / len(ade_values)),
+        mean_fde=_clamp_near_zero(sum(fde_values) / len(fde_values)),
     )
+
+
+def _clamp_near_zero(value: float) -> float:
+    """Return exact zero for values that are only floating-point noise."""
+    if abs(value) < _NEAR_ZERO_TOLERANCE:
+        return 0.0
+    return value
 
 
 def compare_constant_velocity_and_lstm(
