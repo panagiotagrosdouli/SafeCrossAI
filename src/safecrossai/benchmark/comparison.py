@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from safecrossai.datasets.splitting import train_test_split_samples
 from safecrossai.datasets.toy import TrajectorySample
 from safecrossai.evaluation.lstm import evaluate_lstm_model
 from safecrossai.evaluation.metrics import average_displacement_error, final_displacement_error
@@ -51,6 +52,30 @@ def compare_constant_velocity_and_lstm(
     constant_velocity = evaluate_constant_velocity(samples)
     lstm_model, _ = fit_lstm_baseline(samples, epochs=lstm_epochs, hidden_dim=hidden_dim)
     lstm_summary = evaluate_lstm_model(lstm_model, samples)
+
+    return [
+        constant_velocity,
+        BenchmarkRow(
+            model="lstm",
+            samples=lstm_summary.samples,
+            mean_ade=lstm_summary.mean_ade,
+            mean_fde=lstm_summary.mean_fde,
+        ),
+    ]
+
+
+def compare_with_train_test_split(
+    samples: list[TrajectorySample],
+    test_fraction: float = 0.2,
+    seed: int = 42,
+    lstm_epochs: int = 1,
+    hidden_dim: int = 8,
+) -> list[BenchmarkRow]:
+    """Compare baselines using train samples for LSTM and test samples for evaluation."""
+    split = train_test_split_samples(samples, test_fraction=test_fraction, seed=seed)
+    constant_velocity = evaluate_constant_velocity(split.test)
+    lstm_model, _ = fit_lstm_baseline(split.train, epochs=lstm_epochs, hidden_dim=hidden_dim)
+    lstm_summary = evaluate_lstm_model(lstm_model, split.test)
 
     return [
         constant_velocity,
