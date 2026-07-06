@@ -53,6 +53,12 @@ def build_parser() -> argparse.ArgumentParser:
     ind_parser.add_argument("--lstm-epochs", type=int, default=1)
     ind_parser.add_argument("--hidden-dim", type=int, default=8)
     ind_parser.add_argument("--max-samples", type=int, default=32)
+    ind_parser.add_argument(
+        "--classes",
+        nargs="*",
+        default=None,
+        help="Optional inD classes to keep, for example: pedestrian bicycle.",
+    )
 
     return parser
 
@@ -94,10 +100,12 @@ def main() -> None:
         return
 
     if args.command == "ind-benchmark":
+        classes = set(args.classes) if args.classes else None
         samples = build_ind_samples(
             args.path,
             observation_steps=args.observation_steps,
             prediction_steps=args.prediction_steps,
+            classes=classes,
         )
         if args.max_samples > 0:
             samples = samples[: args.max_samples]
