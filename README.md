@@ -23,13 +23,14 @@ The long-term objective is to move beyond single-agent trajectory prediction and
 
 ## Current Stage
 
-SafeCrossAI now includes a first Stage 1 baseline pipeline:
+SafeCrossAI now includes a reproducible baseline and social-interaction foundation:
 
 ```text
-synthetic crossing sample -> constant-velocity prediction -> ADE/FDE evaluation
+trajectory samples -> baseline predictors -> ADE/FDE evaluation -> benchmark reports
+social agents -> neighbors/features/TTC -> interaction graphs
 ```
 
-This validates the repository structure before integrating real trajectory datasets.
+This validates the repository structure before integrating larger real-world trajectory datasets and interaction-aware neural models.
 
 ## Quick Start
 
@@ -50,6 +51,45 @@ from safecrossai.experiments.baseline_experiment import run_constant_velocity_ba
 result = run_constant_velocity_baseline()
 print(result)
 ```
+
+## Social Interaction Modeling
+
+SafeCrossAI includes an initial social interaction layer for reasoning about relationships between road users at smart intersections.
+
+Current capabilities include:
+
+- geometry utilities,
+- radius-based neighbor search,
+- k-nearest neighbor search,
+- pairwise social feature extraction,
+- time-to-collision and closest-approach utilities,
+- radius-based interaction graph construction.
+
+Example:
+
+```python
+import numpy as np
+
+from safecrossai.social import SocialAgent, build_radius_interaction_graph
+
+agents = [
+    SocialAgent(
+        agent_id="pedestrian_1",
+        position=np.array([0.0, 0.0]),
+        velocity=np.array([1.0, 0.0]),
+    ),
+    SocialAgent(
+        agent_id="cyclist_1",
+        position=np.array([2.0, 0.0]),
+        velocity=np.array([0.0, 0.0]),
+    ),
+]
+
+graph = build_radius_interaction_graph(agents, radius=5.0)
+print(graph.edges)
+```
+
+See [`docs/SOCIAL_INTERACTIONS.md`](docs/SOCIAL_INTERACTIONS.md) for details.
 
 ## Main Research Directions
 
@@ -109,6 +149,7 @@ Decision Support
 safecrossai/
 ├── perception/          # Detection, tracking, sensor fusion
 ├── prediction/          # Trajectory and intention prediction models
+├── social/              # Geometry, neighbors, TTC, interaction graphs
 ├── risk/                # Safety metrics and risk assessment
 ├── simulation/          # CARLA/SUMO integration
 ├── datasets/            # Dataset loaders and preprocessing tools
@@ -148,7 +189,7 @@ The platform is designed to support public datasets relevant to autonomous drivi
 1. Define the research scope and system architecture.
 2. Implement baseline trajectory prediction models.
 3. Add dataset preprocessing for intersection-based trajectory datasets.
-4. Implement safety metrics for conflict and collision risk.
+4. Implement social interaction modeling and safety metrics.
 5. Build a minimal visualization dashboard.
 6. Extend the project with graph-based and transformer-based models.
 7. Create a simulation-based smart intersection digital twin.
