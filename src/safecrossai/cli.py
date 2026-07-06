@@ -14,6 +14,7 @@ from safecrossai.benchmark.export import (
     export_benchmark_json,
     export_benchmark_markdown,
 )
+from safecrossai.benchmark.metadata import BenchmarkMetadata
 from safecrossai.benchmark.report import benchmark_rows_to_markdown
 from safecrossai.datasets.ind.samples import build_ind_samples
 from safecrossai.datasets.toy import make_linear_crossing_sample
@@ -113,7 +114,16 @@ def main() -> None:
             lstm_epochs=args.lstm_epochs,
             hidden_dim=args.hidden_dim,
         )
-        _export_rows(rows, args.output_csv, args.output_json, args.output_md)
+        metadata = BenchmarkMetadata(
+            dataset="toy",
+            protocol="same_samples",
+            observation_steps=args.observation_steps,
+            prediction_steps=args.prediction_steps,
+            lstm_epochs=args.lstm_epochs,
+            hidden_dim=args.hidden_dim,
+            samples=1,
+        )
+        _export_rows(rows, args.output_csv, args.output_json, args.output_md, metadata)
         print(benchmark_rows_to_markdown(rows))
         return
 
@@ -127,6 +137,7 @@ def main() -> None:
         )
         if args.max_samples > 0:
             samples = samples[: args.max_samples]
+        protocol = "train_test" if args.train_test else "same_samples"
         if args.train_test:
             rows = compare_with_train_test_split(
                 samples,
@@ -141,7 +152,19 @@ def main() -> None:
                 lstm_epochs=args.lstm_epochs,
                 hidden_dim=args.hidden_dim,
             )
-        _export_rows(rows, args.output_csv, args.output_json, args.output_md)
+        metadata = BenchmarkMetadata(
+            dataset="inD",
+            protocol=protocol,
+            observation_steps=args.observation_steps,
+            prediction_steps=args.prediction_steps,
+            lstm_epochs=args.lstm_epochs,
+            hidden_dim=args.hidden_dim,
+            samples=len(samples),
+            classes=sorted(classes) if classes is not None else None,
+            test_fraction=args.test_fraction if args.train_test else None,
+            seed=args.seed if args.train_test else None,
+        )
+        _export_rows(rows, args.output_csv, args.output_json, args.output_md, metadata)
         print(benchmark_rows_to_markdown(rows))
         return
 
@@ -153,13 +176,14 @@ def _export_rows(
     output_csv: Path | None,
     output_json: Path | None,
     output_md: Path | None,
+    metadata: BenchmarkMetadata | None = None,
 ) -> None:
     if output_csv is not None:
         export_benchmark_csv(rows, output_csv)
     if output_json is not None:
-        export_benchmark_json(rows, output_json)
+        export_benchmark_json(rows, output_json, metadata=metadata)
     if output_md is not None:
-        export_benchmark_markdown(rows, output_md)
+        export_benchmark_markdown(rows, output_md, metadata=metadata)
 
 
 if __name__ == "__main__":
