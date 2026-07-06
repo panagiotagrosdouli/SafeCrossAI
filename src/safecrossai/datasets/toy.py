@@ -14,12 +14,14 @@ class TrajectorySample:
     observed: np.ndarray
     future: np.ndarray
     agent_type: str = "pedestrian"
+    group_id: str | None = None
 
 
 def make_linear_crossing_sample(
     observation_steps: int = 8,
     prediction_steps: int = 12,
     velocity: tuple[float, float] = (0.5, 0.2),
+    group_id: str | None = "toy_trajectory",
 ) -> TrajectorySample:
     """Create a simple synthetic crossing trajectory."""
     if observation_steps < 2:
@@ -38,4 +40,5 @@ def make_linear_crossing_sample(
         observed=positions[:observation_steps],
         future=positions[observation_steps:],
         agent_type="pedestrian",
+        group_id=group_id,
     )
