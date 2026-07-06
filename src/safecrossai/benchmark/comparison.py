@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from safecrossai.datasets.splitting import train_test_split_samples
+from safecrossai.datasets.splitting import grouped_train_test_split_samples, train_test_split_samples
 from safecrossai.datasets.toy import TrajectorySample
 from safecrossai.evaluation.lstm import evaluate_lstm_model
 from safecrossai.evaluation.metrics import average_displacement_error, final_displacement_error
@@ -82,9 +82,35 @@ def compare_with_train_test_split(
 ) -> list[BenchmarkRow]:
     """Compare baselines using train samples for LSTM and test samples for evaluation."""
     split = train_test_split_samples(samples, test_fraction=test_fraction, seed=seed)
-    constant_velocity = evaluate_constant_velocity(split.test)
-    lstm_model, _ = fit_lstm_baseline(split.train, epochs=lstm_epochs, hidden_dim=hidden_dim)
-    lstm_summary = evaluate_lstm_model(lstm_model, split.test)
+    return _compare_on_split(split.train, split.test, lstm_epochs=lstm_epochs, hidden_dim=hidden_dim)
+
+
+def compare_with_grouped_train_test_split(
+    samples: list[TrajectorySample],
+    test_fraction: float = 0.2,
+    seed: int = 42,
+    lstm_epochs: int = 1,
+    hidden_dim: int = 8,
+) -> list[BenchmarkRow]:
+    """Compare baselines using a group-aware train/test split."""
+    split = grouped_train_test_split_samples(
+        samples,
+        group_fn=lambda sample: sample.group_id,
+        test_fraction=test_fraction,
+        seed=seed,
+    )
+    return _compare_on_split(split.train, split.test, lstm_epochs=lstm_epochs, hidden_dim=hidden_dim)
+
+
+def _compare_on_split(
+    train_samples: list[TrajectorySample],
+    test_samples: list[TrajectorySample],
+    lstm_epochs: int,
+    hidden_dim: int,
+) -> list[BenchmarkRow]:
+    constant_velocity = evaluate_constant_velocity(test_samples)
+    lstm_model, _ = fit_lstm_baseline(train_samples, epochs=lstm_epochs, hidden_dim=hidden_dim)
+    lstm_summary = evaluate_lstm_model(lstm_model, test_samples)
 
     return [
         constant_velocity,
