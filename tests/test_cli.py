@@ -65,6 +65,40 @@ def test_toy_benchmark_cli(capsys) -> None:
     assert "lstm" in output
 
 
+def test_ind_benchmark_cli(tmp_path: Path, capsys) -> None:
+    csv_path = tmp_path / "tracks.csv"
+    rows = []
+    for frame in range(5):
+        rows.append(
+            {
+                "trackId": 1,
+                "frame": frame,
+                "xCenter": float(frame),
+                "yCenter": 0.0,
+                "class": "pedestrian",
+            }
+        )
+    pd.DataFrame(rows).to_csv(csv_path, index=False)
+
+    _run_cli([
+        "ind-benchmark",
+        str(csv_path),
+        "--observation-steps",
+        "3",
+        "--prediction-steps",
+        "2",
+        "--lstm-epochs",
+        "1",
+        "--hidden-dim",
+        "8",
+    ])
+
+    output = capsys.readouterr().out
+    assert "| Model | Samples | Mean ADE | Mean FDE |" in output
+    assert "constant_velocity" in output
+    assert "lstm" in output
+
+
 def _run_cli(args: list[str]) -> None:
     import sys
 
