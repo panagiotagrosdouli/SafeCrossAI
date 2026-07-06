@@ -46,6 +46,25 @@ def test_csv_baseline_cli(tmp_path: Path, capsys) -> None:
     assert "mean_fde:" in output
 
 
+def test_toy_benchmark_cli(capsys) -> None:
+    _run_cli([
+        "toy-benchmark",
+        "--observation-steps",
+        "4",
+        "--prediction-steps",
+        "3",
+        "--lstm-epochs",
+        "1",
+        "--hidden-dim",
+        "8",
+    ])
+
+    output = capsys.readouterr().out
+    assert "| Model | Samples | Mean ADE | Mean FDE |" in output
+    assert "constant_velocity" in output
+    assert "lstm" in output
+
+
 def _run_cli(args: list[str]) -> None:
     import sys
 
