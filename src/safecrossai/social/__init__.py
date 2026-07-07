@@ -15,6 +15,7 @@ from .geometry import (
 from .graph import InteractionEdge, InteractionGraph, build_radius_interaction_graph
 from .neighbors import Neighbor, SocialAgent, find_neighbors, k_nearest_neighbors
 from .scene import Scene, make_scene
+from .sequences import SceneSequence, build_scene_sequences
 from .ttc import ClosestApproach, closest_point_of_approach, time_to_collision
 
 __all__ = [
@@ -32,6 +33,8 @@ __all__ = [
     "k_nearest_neighbors",
     "Scene",
     "make_scene",
+    "SceneSequence",
+    "build_scene_sequences",
     "ClosestApproach",
     "closest_point_of_approach",
     "time_to_collision",
