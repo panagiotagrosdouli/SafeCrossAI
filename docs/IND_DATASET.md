@@ -74,6 +74,28 @@ interaction graph
 future Social-LSTM / GNN / Transformer models
 ```
 
+## CLI Scene Summary
+
+Use the CLI to quickly inspect how many scenes, agents, and interaction edges an inD-style tracks file produces.
+
+```bash
+safecrossai ind-scene-summary data/raw/ind/00_tracks.csv \
+  --radius 5.0 \
+  --classes pedestrian bicycle
+```
+
+Example output:
+
+```text
+scenes: 1200
+agents: 8421
+mean_agents_per_scene: 7.02
+interaction_edges: 18432
+mean_edges_per_scene: 15.36
+```
+
+This command is useful before training interaction-aware models because it checks whether the selected radius and class filters produce meaningful social graphs.
+
 ## Data Policy
 
 Do not commit raw inD dataset files to the repository. Store them locally under:
@@ -92,7 +114,8 @@ The current adapter supports:
 - class filtering,
 - frame-level scene construction,
 - social-agent conversion,
-- interaction graph construction from scenes.
+- interaction graph construction from scenes,
+- CLI scene summary for social graph inspection.
 
 Future versions may add:
 
