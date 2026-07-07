@@ -18,6 +18,15 @@ class AgentPositionHistory:
     observed_mask: np.ndarray
 
 
+@dataclass(frozen=True)
+class TemporalTensor:
+    """Tensor-style temporal representation for model inputs."""
+
+    agent_ids: list[str]
+    positions: np.ndarray
+    observed_mask: np.ndarray
+
+
 def extract_position_histories(sequence: SceneSequence) -> list[AgentPositionHistory]:
     """Extract per-agent position histories from a scene sequence.
 
@@ -47,3 +56,24 @@ def extract_position_histories(sequence: SceneSequence) -> list[AgentPositionHis
         )
 
     return histories
+
+
+def sequence_to_temporal_tensor(sequence: SceneSequence) -> TemporalTensor:
+    """Convert a scene sequence into stacked position and mask arrays.
+
+    The returned position tensor has shape ``(num_agents, num_steps, 2)`` and
+    the observed mask has shape ``(num_agents, num_steps)``.
+    """
+    histories = extract_position_histories(sequence)
+    if not histories:
+        return TemporalTensor(
+            agent_ids=[],
+            positions=np.empty((0, len(sequence.scenes), 2), dtype=float),
+            observed_mask=np.empty((0, len(sequence.scenes)), dtype=bool),
+        )
+
+    return TemporalTensor(
+        agent_ids=[history.agent_id for history in histories],
+        positions=np.stack([history.positions for history in histories]),
+        observed_mask=np.stack([history.observed_mask for history in histories]),
+    )
