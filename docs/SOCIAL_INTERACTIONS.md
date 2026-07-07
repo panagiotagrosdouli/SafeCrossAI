@@ -197,7 +197,21 @@ for history in histories:
     print(history.observed_mask)
 ```
 
-This is the first tensor-like input format for future Social-LSTM and Transformer models.
+## Temporal Tensor Format
+
+`sequence_to_temporal_tensor` stacks all agent histories into model-ready arrays.
+
+```python
+from safecrossai.social import sequence_to_temporal_tensor
+
+tensor = sequence_to_temporal_tensor(sequences[0])
+
+print(tensor.agent_ids)
+print(tensor.positions.shape)      # (num_agents, num_steps, 2)
+print(tensor.observed_mask.shape)  # (num_agents, num_steps)
+```
+
+This format is designed as the first direct input representation for Social-LSTM and Transformer models.
 
 ## Research Role
 
