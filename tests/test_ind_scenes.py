@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from safecrossai.datasets.ind.scenes import build_ind_scenes
+from safecrossai.datasets.ind.scenes import build_ind_scene_sequences, build_ind_scenes
 
 
 def test_build_ind_scenes_from_tracks_csv(tmp_path: Path) -> None:
@@ -61,3 +61,31 @@ def test_build_ind_scenes_filters_classes(tmp_path: Path) -> None:
 
     assert len(scenes) == 1
     assert scenes[0].agent_ids() == ["1"]
+
+
+def test_build_ind_scene_sequences(tmp_path: Path) -> None:
+    csv_path = tmp_path / "tracks.csv"
+    rows = []
+    for frame in range(4):
+        rows.append(
+            {
+                "trackId": 1,
+                "frame": frame,
+                "xCenter": float(frame),
+                "yCenter": 0.0,
+                "class": "pedestrian",
+            }
+        )
+    pd.DataFrame(rows).to_csv(csv_path, index=False)
+
+    sequences = build_ind_scene_sequences(
+        csv_path,
+        sequence_length=2,
+        stride=2,
+        classes={"pedestrian"},
+    )
+
+    assert len(sequences) == 2
+    assert sequences[0].start_time == 0.0
+    assert sequences[1].start_time == 2.0
+    assert sequences[0].agent_ids() == ["1"]
