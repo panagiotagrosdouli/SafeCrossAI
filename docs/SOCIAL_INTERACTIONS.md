@@ -154,6 +154,34 @@ print(scene.agent_ids())
 print(graph.edges)
 ```
 
+## Scene Sequences
+
+A `SceneSequence` stores multiple ordered scenes. This is the temporal input representation for future Social-LSTM, GNN, Transformer, and Diffusion models.
+
+```python
+import numpy as np
+
+from safecrossai.social import SocialAgent, build_scene_sequences, make_scene
+
+scenes = [
+    make_scene(
+        scene_id="frame_0",
+        timestamp=0.0,
+        agents=[SocialAgent(agent_id="pedestrian_1", position=np.array([0.0, 0.0]))],
+    ),
+    make_scene(
+        scene_id="frame_1",
+        timestamp=1.0,
+        agents=[SocialAgent(agent_id="pedestrian_1", position=np.array([1.0, 0.0]))],
+    ),
+]
+
+sequences = build_scene_sequences(scenes, sequence_length=2, stride=1)
+print(sequences[0].start_time)
+print(sequences[0].end_time)
+print(sequences[0].agent_ids())
+```
+
 ## Research Role
 
 The social interaction layer is the bridge between trajectory prediction and road-safety reasoning. It provides the primitives needed for:
