@@ -22,6 +22,7 @@ from safecrossai.datasets.ind.scenes import build_ind_scenes
 from safecrossai.datasets.toy import make_linear_crossing_sample
 from safecrossai.experiments.baseline_experiment import run_constant_velocity_baseline
 from safecrossai.experiments.csv_baseline_experiment import run_csv_constant_velocity_baseline
+from safecrossai.social import build_scene_sequences
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -87,6 +88,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     scene_parser.add_argument("path", type=Path, help="Path to inD-style tracks CSV file.")
     scene_parser.add_argument("--radius", type=float, default=5.0)
+    scene_parser.add_argument("--sequence-length", type=int, default=None)
+    scene_parser.add_argument("--stride", type=int, default=1)
     scene_parser.add_argument(
         "--classes",
         nargs="*",
@@ -204,6 +207,15 @@ def main() -> None:
         print(f"mean_agents_per_scene: {_mean(agent_counts):.2f}")
         print(f"interaction_edges: {sum(edge_counts)}")
         print(f"mean_edges_per_scene: {_mean(edge_counts):.2f}")
+        if args.sequence_length is not None:
+            sequences = build_scene_sequences(
+                scenes,
+                sequence_length=args.sequence_length,
+                stride=args.stride,
+            )
+            print(f"scene_sequences: {len(sequences)}")
+            print(f"sequence_length: {args.sequence_length}")
+            print(f"sequence_stride: {args.stride}")
         return
 
     parser.error(f"unknown command: {args.command}")
