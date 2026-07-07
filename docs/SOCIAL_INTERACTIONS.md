@@ -182,6 +182,23 @@ print(sequences[0].end_time)
 print(sequences[0].agent_ids())
 ```
 
+## Temporal Position Histories
+
+`extract_position_histories` converts a `SceneSequence` into per-agent position tensors and observation masks. Missing agents are represented with `NaN` positions and `False` mask values.
+
+```python
+from safecrossai.social import extract_position_histories
+
+histories = extract_position_histories(sequences[0])
+
+for history in histories:
+    print(history.agent_id)
+    print(history.positions)
+    print(history.observed_mask)
+```
+
+This is the first tensor-like input format for future Social-LSTM and Transformer models.
+
 ## Research Role
 
 The social interaction layer is the bridge between trajectory prediction and road-safety reasoning. It provides the primitives needed for:
