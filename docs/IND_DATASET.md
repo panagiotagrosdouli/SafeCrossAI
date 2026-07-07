@@ -60,6 +60,25 @@ print(scene.agent_ids())
 print(graph.edges)
 ```
 
+## Scene Sequence Usage
+
+Frame-level scenes can be converted into temporal `SceneSequence` windows for future Social-LSTM, GNN, Transformer, and Diffusion models.
+
+```python
+from safecrossai.datasets.ind.scenes import build_ind_scene_sequences
+
+sequences = build_ind_scene_sequences(
+    "data/raw/ind/00_tracks.csv",
+    sequence_length=8,
+    stride=1,
+    classes={"pedestrian", "bicycle"},
+)
+
+print(sequences[0].start_time)
+print(sequences[0].end_time)
+print(sequences[0].agent_ids())
+```
+
 This connects real inD-style tracks to SafeCrossAI's unified social representation:
 
 ```text
@@ -67,20 +86,24 @@ inD tracks CSV
       ↓
 frame-level Scene
       ↓
-SocialAgent nodes
+SceneSequence
       ↓
-interaction graph
+SocialAgent nodes over time
+      ↓
+temporal interaction graphs
       ↓
 future Social-LSTM / GNN / Transformer models
 ```
 
 ## CLI Scene Summary
 
-Use the CLI to quickly inspect how many scenes, agents, and interaction edges an inD-style tracks file produces.
+Use the CLI to quickly inspect how many scenes, agents, interaction edges, and optional scene sequences an inD-style tracks file produces.
 
 ```bash
 safecrossai ind-scene-summary data/raw/ind/00_tracks.csv \
   --radius 5.0 \
+  --sequence-length 8 \
+  --stride 1 \
   --classes pedestrian bicycle
 ```
 
@@ -92,9 +115,12 @@ agents: 8421
 mean_agents_per_scene: 7.02
 interaction_edges: 18432
 mean_edges_per_scene: 15.36
+scene_sequences: 1193
+sequence_length: 8
+sequence_stride: 1
 ```
 
-This command is useful before training interaction-aware models because it checks whether the selected radius and class filters produce meaningful social graphs.
+This command is useful before training interaction-aware models because it checks whether the selected radius, class filters, and temporal window length produce meaningful social inputs.
 
 ## Data Policy
 
@@ -115,7 +141,8 @@ The current adapter supports:
 - frame-level scene construction,
 - social-agent conversion,
 - interaction graph construction from scenes,
-- CLI scene summary for social graph inspection.
+- scene sequence construction,
+- CLI scene summary for social graph and temporal sequence inspection.
 
 Future versions may add:
 
@@ -123,5 +150,4 @@ Future versions may add:
 - map context,
 - lane and crosswalk context,
 - scene-level train/validation/test splitting,
-- multi-frame scene sequences,
 - map-aware interaction graphs.
