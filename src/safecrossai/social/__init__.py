@@ -16,6 +16,7 @@ from .graph import InteractionEdge, InteractionGraph, build_radius_interaction_g
 from .neighbors import Neighbor, SocialAgent, find_neighbors, k_nearest_neighbors
 from .scene import Scene, make_scene
 from .sequences import SceneSequence, build_scene_sequences
+from .temporal_features import AgentPositionHistory, extract_position_histories
 from .ttc import ClosestApproach, closest_point_of_approach, time_to_collision
 
 __all__ = [
@@ -35,6 +36,8 @@ __all__ = [
     "make_scene",
     "SceneSequence",
     "build_scene_sequences",
+    "AgentPositionHistory",
+    "extract_position_histories",
     "ClosestApproach",
     "closest_point_of_approach",
     "time_to_collision",
