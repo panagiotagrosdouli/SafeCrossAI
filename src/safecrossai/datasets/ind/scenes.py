@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from safecrossai.datasets.ind.loader import load_ind_tracks_csv
-from safecrossai.social import Scene, SocialAgent, make_scene
+from safecrossai.social import Scene, SceneSequence, SocialAgent, build_scene_sequences, make_scene
 
 
 def build_ind_scenes(
@@ -54,3 +54,14 @@ def build_ind_scenes(
             )
 
     return scenes
+
+
+def build_ind_scene_sequences(
+    path: str | Path,
+    sequence_length: int,
+    stride: int = 1,
+    classes: set[str] | None = None,
+) -> list[SceneSequence]:
+    """Build sliding-window scene sequences from an inD-style tracks CSV file."""
+    scenes = build_ind_scenes(path, classes=classes)
+    return build_scene_sequences(scenes, sequence_length=sequence_length, stride=stride)
