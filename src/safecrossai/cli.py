@@ -18,6 +18,7 @@ from safecrossai.benchmark.export import (
 from safecrossai.benchmark.metadata import BenchmarkMetadata
 from safecrossai.benchmark.report import benchmark_rows_to_markdown
 from safecrossai.datasets.ind.samples import build_ind_samples
+from safecrossai.datasets.ind.scenes import build_ind_scenes
 from safecrossai.datasets.toy import make_linear_crossing_sample
 from safecrossai.experiments.baseline_experiment import run_constant_velocity_baseline
 from safecrossai.experiments.csv_baseline_experiment import run_csv_constant_velocity_baseline
@@ -74,6 +75,19 @@ def build_parser() -> argparse.ArgumentParser:
     ind_parser.add_argument("--output-json", type=Path, default=None)
     ind_parser.add_argument("--output-md", type=Path, default=None)
     ind_parser.add_argument(
+        "--classes",
+        nargs="*",
+        default=None,
+        help="Optional inD classes to keep, for example: pedestrian bicycle.",
+    )
+
+    scene_parser = subparsers.add_parser(
+        "ind-scene-summary",
+        help="Summarize frame-level scenes from an inD-style tracks CSV file.",
+    )
+    scene_parser.add_argument("path", type=Path, help="Path to inD-style tracks CSV file.")
+    scene_parser.add_argument("--radius", type=float, default=5.0)
+    scene_parser.add_argument(
         "--classes",
         nargs="*",
         default=None,
@@ -180,6 +194,18 @@ def main() -> None:
         print(benchmark_rows_to_markdown(rows))
         return
 
+    if args.command == "ind-scene-summary":
+        classes = set(args.classes) if args.classes else None
+        scenes = build_ind_scenes(args.path, classes=classes)
+        edge_counts = [len(scene.build_interaction_graph(radius=args.radius).edges) for scene in scenes]
+        agent_counts = [len(scene.agents) for scene in scenes]
+        print(f"scenes: {len(scenes)}")
+        print(f"agents: {sum(agent_counts)}")
+        print(f"mean_agents_per_scene: {_mean(agent_counts):.2f}")
+        print(f"interaction_edges: {sum(edge_counts)}")
+        print(f"mean_edges_per_scene: {_mean(edge_counts):.2f}")
+        return
+
     parser.error(f"unknown command: {args.command}")
 
 
@@ -196,6 +222,12 @@ def _export_rows(
         export_benchmark_json(rows, output_json, metadata=metadata)
     if output_md is not None:
         export_benchmark_markdown(rows, output_md, metadata=metadata)
+
+
+def _mean(values: list[int]) -> float:
+    if not values:
+        return 0.0
+    return sum(values) / len(values)
 
 
 if __name__ == "__main__":
