@@ -41,7 +41,13 @@ def plot_trajectory_prediction(
     figure, axis = plt.subplots(figsize=(7, 5))
     axis.plot(observed[:, 0], observed[:, 1], marker="o", label="observed")
     axis.plot(future[:, 0], future[:, 1], marker="o", label="future")
-    axis.plot(prediction[:, 0], prediction[:, 1], marker="x", linestyle="--", label="prediction")
+    axis.plot(
+        prediction[:, 0],
+        prediction[:, 1],
+        marker="x",
+        linestyle="--",
+        label="prediction",
+    )
     axis.scatter(observed[-1, 0], observed[-1, 1], marker="s", label="last observed")
     axis.set_title(title)
     axis.set_xlabel("x")
