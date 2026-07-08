@@ -58,6 +58,21 @@ For binary conflict labels, report:
 - precision-recall curve;
 - expected calibration error when probabilities are used.
 
+## Uncertainty-Aware Risk Evaluation
+
+SafeCrossAI now includes a **Prototype** uncertainty interface based on 2D covariance matrices. This is not a calibrated uncertainty model. It is an engineering scaffold for future probabilistic predictors.
+
+Future uncertainty experiments must report:
+
+- the source of uncertainty estimates;
+- whether covariances are predicted, fitted, or assumed;
+- calibration metrics such as reliability diagrams and expected calibration error;
+- negative log-likelihood when probabilistic ground truth evaluation is appropriate;
+- risk-score changes under uncertainty inflation;
+- sensitivity to the chosen sigma scale.
+
+A risk score must not be interpreted as a probability unless calibration is demonstrated on held-out labelled data.
+
 ## Calibration
 
 Risk scores should not be interpreted as probabilities unless calibration is evaluated. Calibration experiments should report reliability diagrams and expected calibration error.
