@@ -33,7 +33,9 @@ def render_scene(scene: Scene, ax: plt.Axes, risk_radius: float = 8.0) -> None:
     ax.axvline(0.0, linewidth=1.0, alpha=0.25)
 
     for agent in scene.agents:
-        velocity = np.zeros(2) if agent.velocity is None else np.asarray(agent.velocity, dtype=float)
+        velocity = (
+            np.zeros(2) if agent.velocity is None else np.asarray(agent.velocity, dtype=float)
+        )
         ax.scatter(
             agent.position[0],
             agent.position[1],
@@ -50,7 +52,12 @@ def render_scene(scene: Scene, ax: plt.Axes, risk_radius: float = 8.0) -> None:
             length_includes_head=True,
             alpha=0.75,
         )
-        ax.text(agent.position[0] + 0.12, agent.position[1] + 0.12, agent.agent_id, fontsize=8)
+        ax.text(
+            agent.position[0] + 0.12,
+            agent.position[1] + 0.12,
+            agent.agent_id,
+            fontsize=8,
+        )
 
     graph = scene.build_interaction_graph(radius=risk_radius)
     config = RiskConfig()
@@ -83,7 +90,11 @@ def render_scenario_frame(scene: Scene, output_path: Path | str) -> Path:
     return output
 
 
-def save_scenario_gif(frame_paths: list[Path], output_path: Path | str, duration_ms: int = 120) -> Path:
+def save_scenario_gif(
+    frame_paths: list[Path],
+    output_path: Path | str,
+    duration_ms: int = 120,
+) -> Path:
     """Assemble PNG frames into a GIF using imageio.
 
     The function imports imageio lazily so baseline users do not need the GIF
