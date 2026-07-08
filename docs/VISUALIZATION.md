@@ -24,7 +24,8 @@ Implemented / prototype:
 - interaction edges;
 - risk-weighted edge overlays;
 - PNG frame export;
-- GIF assembly.
+- GIF assembly;
+- deterministic generation of architecture, pipeline, dependency, prediction, interaction, risk, ROC, precision-recall, confusion-matrix, and calibration figures.
 
 ## Demo GIF
 
@@ -35,6 +36,31 @@ python scripts/make_demo_gif.py --output assets/demo.gif --mp4 assets/demo.mp4
 ```
 
 The GIF is generated from a deterministic synthetic scenario. It should be labelled as a synthetic demo wherever it is shown.
+
+## Scientific Figures
+
+Generate the explanatory figure set with:
+
+```bash
+python scripts/generate_figures.py --output-dir assets
+```
+
+The script writes:
+
+```text
+assets/architecture_diagram.png
+assets/pipeline_diagram.png
+assets/module_dependency_graph.png
+assets/trajectory_prediction.png
+assets/interaction_graph.png
+assets/risk_overlay.png
+assets/confusion_matrix.png
+assets/roc_curve.png
+assets/precision_recall_curve.png
+assets/calibration_curve.png
+```
+
+These figures are deterministic communication artifacts. The evaluation curves use synthetic labels and scores for visualization only; they are not benchmark evidence.
 
 ## Figure Policy
 
@@ -53,5 +79,5 @@ Figures intended for papers should:
 - uncertainty ellipses;
 - interaction graph overlay on map geometry;
 - risk timeline plots;
-- calibration and reliability diagrams;
+- calibration and reliability diagrams from real validation data;
 - publication-ready figure templates.
