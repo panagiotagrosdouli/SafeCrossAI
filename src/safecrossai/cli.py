@@ -200,7 +200,9 @@ def main() -> None:
     if args.command == "ind-scene-summary":
         classes = set(args.classes) if args.classes else None
         scenes = build_ind_scenes(args.path, classes=classes)
-        edge_counts = [len(scene.build_interaction_graph(radius=args.radius).edges) for scene in scenes]
+        edge_counts = [
+            len(scene.build_interaction_graph(radius=args.radius).edges) for scene in scenes
+        ]
         agent_counts = [len(scene.agents) for scene in scenes]
         print(f"scenes: {len(scenes)}")
         print(f"agents: {sum(agent_counts)}")
