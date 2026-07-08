@@ -131,7 +131,7 @@ def expected_calibration_error(
 
     edges = np.linspace(0.0, 1.0, num_bins + 1)
     ece = 0.0
-    for lower, upper in zip(edges[:-1], edges[1:]):
+    for lower, upper in zip(edges[:-1], edges[1:], strict=False):
         if upper < 1.0:
             mask = (probs >= lower) & (probs < upper)
         else:
