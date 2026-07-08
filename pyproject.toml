@@ -1,7 +1,7 @@
 [project]
 name = "safecrossai"
 version = "0.1.0"
-description = "AI-powered intelligent intersection platform for vulnerable road user trajectory prediction and road safety research."
+description = "Research scaffold for intelligent-intersection VRU trajectory prediction and interaction-risk analysis."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
@@ -14,7 +14,9 @@ keywords = [
     "smart-intersections",
     "autonomous-driving",
     "road-safety",
-    "intelligent-transportation-systems"
+    "intelligent-transportation-systems",
+    "interaction-graphs",
+    "risk-estimation",
 ]
 dependencies = [
     "numpy>=1.24",
@@ -23,7 +25,6 @@ dependencies = [
     "matplotlib>=3.7",
     "tqdm>=4.66",
     "pyyaml>=6.0",
-    "torch>=2.1"
 ]
 
 [project.scripts]
@@ -31,25 +32,49 @@ safecrossai = "safecrossai.cli:main"
 
 [project.optional-dependencies]
 dev = [
+    "black>=24.0",
     "pytest>=7.4",
+    "pytest-cov>=4.1",
     "ruff>=0.4",
     "mypy>=1.8",
-    "jupyter>=1.0"
+    "pre-commit>=3.6",
+    "jupyter>=1.0",
+]
+demo = [
+    "imageio>=2.34",
+    "imageio-ffmpeg>=0.4",
 ]
 vision = [
-    "opencv-python>=4.8"
+    "opencv-python>=4.8",
 ]
 graph = [
-    "torch-geometric>=2.5"
+    "torch>=2.1",
+    "torch-geometric>=2.5",
 ]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
 
 [tool.ruff]
 line-length = 100
-src = ["src", "tests"]
+src = ["src", "tests", "scripts"]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "PL"]
+ignore = ["PLR0913"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+addopts = "--strict-markers --disable-warnings"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
 
 [build-system]
 requires = ["setuptools>=68", "wheel"]
