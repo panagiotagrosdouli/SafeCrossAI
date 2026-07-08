@@ -15,8 +15,6 @@ def benchmark_rows_to_markdown(rows: list[BenchmarkRow]) -> str:
         "|---|---:|---:|---:|",
     ]
     for row in rows:
-        lines.append(
-            f"| {row.model} | {row.samples} | {row.mean_ade:.6f} | {row.mean_fde:.6f} |"
-        )
+        lines.append(f"| {row.model} | {row.samples} | {row.mean_ade:.6f} | {row.mean_fde:.6f} |")
 
     return "\n".join(lines)
