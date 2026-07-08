@@ -61,9 +61,7 @@ def build_radius_interaction_graph(
                 time_to_closest = approach.time
                 closest_distance = approach.distance
 
-            current_distance = float(
-                ((source.position - target.position) ** 2).sum() ** 0.5
-            )
+            current_distance = float(((source.position - target.position) ** 2).sum() ** 0.5)
             if current_distance <= radius:
                 edges.append(
                     InteractionEdge(
