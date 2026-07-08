@@ -16,9 +16,15 @@ from .scoring import (
     distance_risk,
     ttc_risk,
 )
+from .uncertainty import (
+    PositionalUncertainty,
+    uncertainty_confidence_penalty,
+    uncertainty_inflated_distance,
+)
 
 __all__ = [
     "PairwiseRiskReport",
+    "PositionalUncertainty",
     "RiskConfig",
     "RiskLevel",
     "assess_pairwise_risk",
@@ -26,4 +32,6 @@ __all__ = [
     "confidence_score",
     "distance_risk",
     "ttc_risk",
+    "uncertainty_confidence_penalty",
+    "uncertainty_inflated_distance",
 ]
