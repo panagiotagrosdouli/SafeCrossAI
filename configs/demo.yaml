@@ -1,0 +1,20 @@
+scenario:
+  name: synthetic_intersection_demo
+  num_steps: 30
+  dt: 0.2
+
+risk:
+  interaction_radius_m: 1.5
+  ttc_horizon_s: 6.0
+  distance_horizon_m: 12.0
+
+visualization:
+  frames_dir: assets/demo_frames
+  gif_path: assets/demo.gif
+  mp4_path: assets/demo.mp4
+  duration_ms: 120
+
+metadata:
+  synthetic: true
+  benchmark: false
+  note: "Synthetic demo for pipeline visualization, not benchmark evidence."
