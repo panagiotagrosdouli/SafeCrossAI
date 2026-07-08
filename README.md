@@ -1,36 +1,99 @@
 # SafeCrossAI
 
-**SafeCrossAI** is an AI-powered research platform for intelligent urban intersections, focused on vulnerable road user (VRU) safety, trajectory prediction, risk assessment, and cooperative perception for connected and autonomous mobility.
+<p align="center">
+  <strong>AI-based intelligent infrastructure for vulnerable road-user trajectory prediction and safety-critical interaction analysis.</strong>
+</p>
 
-The project investigates how infrastructure-based sensing and machine learning can help smart intersections understand complex multi-agent traffic scenes and anticipate dangerous interactions between pedestrians, cyclists, e-scooter riders, vehicles, and connected/autonomous vehicles.
+<p align="center">
+  <em>Research-grade scaffold for smart-intersection perception, prediction, interaction modelling, and uncertainty-aware risk estimation.</em>
+</p>
 
-## Research Vision
+<p align="center">
+  <img src="assets/architecture_placeholder.svg" alt="SafeCrossAI architecture placeholder" width="760" />
+</p>
 
-Urban intersections are among the most safety-critical environments in road transportation. Vulnerable road users interact with human-driven vehicles, connected vehicles, autonomous vehicles, traffic lights, occlusions, and dynamic urban infrastructure. SafeCrossAI aims to develop an end-to-end research framework that combines perception, behavior understanding, trajectory forecasting, uncertainty estimation, and real-time risk assessment.
+> **Scientific honesty statement.** SafeCrossAI is an early research platform. It currently implements a deterministic trajectory baseline, toy trajectory generation, social-interaction utilities, interaction graph construction, time-to-collision / closest-approach reasoning, and risk/visualization scaffolding. It does **not** claim state-of-the-art performance, real-world deployment, or completed benchmark results. Neural predictors, public dataset loaders, infrastructure-perception models, and large-scale evaluation are marked as **Prototype** or **Planned** until implemented and validated.
 
-The long-term objective is to move beyond single-agent trajectory prediction and toward an intelligent intersection system capable of:
+---
 
-- detecting and tracking heterogeneous traffic participants,
-- modeling interactions between vehicles and vulnerable road users,
-- predicting multi-modal future trajectories,
-- estimating collision risk and uncertainty,
-- supporting connected and autonomous driving applications,
-- enabling reproducible research through simulation and public datasets.
+## Research Problem
 
-## Core Research Problem
+Urban intersections are safety-critical environments where vulnerable road users (VRUs) such as pedestrians, cyclists, and micromobility users interact with vehicles, traffic lights, occlusions, and infrastructure sensors. Autonomous and connected mobility systems require more than object detection: they require anticipatory reasoning about future motion and safety-critical interactions.
 
-**How can an intelligent intersection use infrastructure-based perception and AI to predict the motion of vulnerable road users and prevent safety-critical conflicts with connected and autonomous vehicles?**
+SafeCrossAI is organized around the following research question:
 
-## Current Stage
+> **How can intelligent infrastructure anticipate vulnerable road-user behaviour and identify safety-critical interactions before collisions occur using AI-based perception, trajectory prediction, and uncertainty-aware risk estimation?**
 
-SafeCrossAI now includes a reproducible baseline and social-interaction foundation:
+---
+
+## Research Hypothesis
+
+A smart-intersection system that combines infrastructure-based sensing, interaction-aware trajectory prediction, uncertainty-aware risk estimation, and interpretable safety metrics can detect potential conflicts earlier and more transparently than a pipeline that treats road users independently.
+
+This repository currently supports this hypothesis only at the **scaffold and baseline** level. It provides the software structure required for controlled experiments but does not yet report benchmark conclusions.
+
+---
+
+## Current Contributions
+
+### Implemented
+
+- Synthetic toy trajectory generation for controlled smoke tests.
+- Constant-velocity trajectory prediction baseline.
+- ADE and FDE metrics for trajectory prediction.
+- Social-agent representation for multi-agent traffic scenes.
+- Radius-based and k-nearest-neighbor search.
+- Relative geometry, distance, bearing, and velocity utilities.
+- Time-to-collision and closest-point-of-approach utilities.
+- Radius-based directed interaction graph construction.
+- Scene and scene-sequence abstractions.
+- Temporal tensor extraction for future sequence models.
+
+### Added research-grade scaffold
+
+- Risk scoring and interpretable conflict reports.
+- Extended evaluation metrics: miss rate, precision, recall, F1, confusion matrix, ROC, precision-recall, and calibration helpers.
+- Reproducible demo scenario generation.
+- Visualization utilities for trajectories, interaction graphs, risk overlays, and GIF/MP4 generation.
+- Documentation for research overview, architecture, datasets, evaluation, roadmap, API, and visualization.
+- CI, formatting, testing, and pre-commit configuration scaffolds.
+
+### Prototype / Planned
+
+- Public dataset loaders for inD, rounD, INTERACTION, Argoverse, nuScenes, Waymo, and V2X datasets.
+- Learning-based trajectory predictors.
+- Infrastructure perception models.
+- Uncertainty-calibrated neural forecasting.
+- CARLA/SUMO digital-twin simulation.
+- Real benchmark tables and paper-grade numerical results.
+
+---
+
+## Pipeline
 
 ```text
-trajectory samples -> baseline predictors -> ADE/FDE evaluation -> benchmark reports
-social agents -> neighbors/features/TTC -> interaction graphs
+Infrastructure Sensors / Simulation
+        |
+        v
+Perception and Tracking              [Prototype]
+        |
+        v
+Scene Representation                  [Implemented scaffold]
+        |
+        v
+Trajectory Prediction                 [Constant Velocity implemented; learned models planned]
+        |
+        v
+Interaction Graph                     [Implemented]
+        |
+        v
+TTC / CPA / Risk Estimation           [Implemented baseline risk model]
+        |
+        v
+Evaluation and Visualization          [Scaffold + demo generation]
 ```
 
-This validates the repository structure before integrating larger real-world trajectory datasets and interaction-aware neural models.
+---
 
 ## Quick Start
 
@@ -43,174 +106,168 @@ python -m pip install -e .[dev]
 pytest
 ```
 
-Minimal Python usage:
+Run the deterministic baseline:
 
-```python
-from safecrossai.experiments.baseline_experiment import run_constant_velocity_baseline
-
-result = run_constant_velocity_baseline()
-print(result)
+```bash
+python scripts/run_baseline.py
 ```
 
-## Social Interaction Modeling
+Run the risk demo:
 
-SafeCrossAI includes an initial social interaction layer for reasoning about relationships between road users at smart intersections.
+```bash
+python scripts/run_risk_demo.py
+```
 
-Current capabilities include:
+Generate the reproducible demo GIF and MP4:
 
-- geometry utilities,
-- radius-based neighbor search,
-- k-nearest neighbor search,
-- pairwise social feature extraction,
-- time-to-collision and closest-approach utilities,
-- radius-based interaction graph construction.
+```bash
+python scripts/make_demo_gif.py --output assets/demo.gif --mp4 assets/demo.mp4
+```
 
-Example:
+The demo uses a synthetic scenario only. It is designed to verify the pipeline and visualization stack, not to report real-world performance.
+
+---
+
+## Minimal Python Example
 
 ```python
 import numpy as np
 
-from safecrossai.social import SocialAgent, build_radius_interaction_graph
+from safecrossai.prediction.baseline import constant_velocity_predict
+from safecrossai.risk import RiskConfig, assess_pairwise_risk
+from safecrossai.social import SocialAgent
 
-agents = [
-    SocialAgent(
-        agent_id="pedestrian_1",
-        position=np.array([0.0, 0.0]),
-        velocity=np.array([1.0, 0.0]),
-    ),
-    SocialAgent(
-        agent_id="cyclist_1",
-        position=np.array([2.0, 0.0]),
-        velocity=np.array([0.0, 0.0]),
-    ),
-]
+pedestrian = SocialAgent(
+    agent_id="pedestrian_1",
+    position=np.array([0.0, 0.0]),
+    velocity=np.array([1.0, 0.0]),
+    agent_type="pedestrian",
+)
+vehicle = SocialAgent(
+    agent_id="vehicle_1",
+    position=np.array([8.0, 0.0]),
+    velocity=np.array([-2.0, 0.0]),
+    agent_type="vehicle",
+)
 
-graph = build_radius_interaction_graph(agents, radius=5.0)
-print(graph.edges)
+report = assess_pairwise_risk(pedestrian, vehicle, config=RiskConfig())
+print(report.level, report.score, report.time_to_collision)
 ```
 
-See [`docs/SOCIAL_INTERACTIONS.md`](docs/SOCIAL_INTERACTIONS.md) for details.
+---
 
-## Main Research Directions
-
-### 1. Infrastructure-Based Perception
-
-SafeCrossAI considers cameras, LiDAR, radar, roadside units, and V2X communication as components of an intelligent intersection perception stack.
-
-### 2. Scene Understanding
-
-The platform aims to represent the intersection as a dynamic multi-agent scene containing pedestrians, cyclists, micromobility users, vehicles, lane geometry, traffic lights, crosswalks, and semantic context.
-
-### 3. VRU Intention and Behavior Modeling
-
-The project studies whether vulnerable road users are likely to cross, stop, accelerate, change direction, or interact with other agents.
-
-### 4. Multi-Agent Trajectory Prediction
-
-SafeCrossAI will compare and extend models such as LSTMs, graph neural networks, transformer-based predictors, diffusion models, and interaction-aware forecasting methods.
-
-### 5. Risk Assessment and Decision Support
-
-Predicted trajectories will be translated into interpretable safety indicators such as collision probability, time-to-collision, post-encroachment time, conflict severity, and uncertainty-aware risk scores.
-
-### 6. Digital Twin and Simulation
-
-The project will use simulation environments such as CARLA and SUMO to prototype intelligent intersections, generate scenarios, and evaluate safety interventions before real-world deployment.
-
-## Proposed System Architecture
+## Repository Structure
 
 ```text
-Roadside Sensors / Simulation
-          |
-          v
-Perception Layer
-(Object Detection, Tracking, Sensor Fusion)
-          |
-          v
-Scene Representation
-(Agents, Map, Crosswalks, Traffic Lights, Interactions)
-          |
-          v
-Behavior and Trajectory Prediction
-(Intention, Multi-Agent Forecasting, Uncertainty)
-          |
-          v
-Risk Assessment
-(Collision Risk, TTC, PET, Conflict Zones)
-          |
-          v
-Decision Support
-(Warnings, V2X Messages, Visualization, Evaluation)
+SafeCrossAI/
+├── README.md
+├── CITATION.cff
+├── pyproject.toml
+├── requirements.txt
+├── configs/                 # YAML experiment and demo configurations
+├── docs/                    # Research and engineering documentation
+├── paper/                   # Abstract, contribution, and future-work notes
+├── assets/                  # Figures, GIFs, and generated visual outputs
+├── examples/                # Minimal runnable examples
+├── datasets/                # Dataset notes and future loader scaffolds
+├── scripts/                 # CLI entry points for experiments and demos
+├── tests/                   # Unit tests and regression tests
+├── benchmarks/              # Benchmark scripts and templates
+├── results/                 # Generated outputs; no fake results committed
+├── website/                 # Future research-project website scaffold
+└── src/safecrossai/
+    ├── datasets/            # Synthetic and future real dataset loaders
+    ├── prediction/          # Baselines and future learned predictors
+    ├── social/              # Interaction geometry and graph construction
+    ├── risk/                # TTC/CPA/conflict risk scoring
+    ├── perception/          # Prototype perception interfaces
+    ├── evaluation/          # Metrics and benchmarking utilities
+    ├── visualization/       # Trajectory/risk/demo rendering
+    ├── simulation/          # Future CARLA/SUMO integration
+    └── utils/               # Configuration, logging, and shared helpers
 ```
 
-## Planned Modules
+---
+
+## Evaluation Policy
+
+SafeCrossAI follows a strict reporting policy:
+
+- No benchmark numbers are reported unless produced by a reproducible script.
+- Synthetic demos are labelled as synthetic demos.
+- Public dataset support is marked **Planned** until loaders and license notes are implemented.
+- Neural models are marked **Prototype** until trained, evaluated, and compared against baselines.
+- Each result should include dataset split, number of scenes, prediction horizon, random seeds, and metric definitions.
+
+Core metrics include ADE, FDE, miss rate, precision, recall, F1, confusion matrix, ROC, precision-recall curves, and calibration summaries.
+
+---
+
+## Demo GIF and Figures
+
+The generated demo should show:
+
+1. observed agent trajectories,
+2. constant-velocity future predictions,
+3. interaction edges,
+4. time-to-collision / closest-approach information,
+5. risk overlays.
+
+Generated files:
 
 ```text
-safecrossai/
-├── perception/          # Detection, tracking, sensor fusion
-├── prediction/          # Trajectory and intention prediction models
-├── social/              # Geometry, neighbors, TTC, interaction graphs
-├── risk/                # Safety metrics and risk assessment
-├── simulation/          # CARLA/SUMO integration
-├── datasets/            # Dataset loaders and preprocessing tools
-├── visualization/       # Plots, dashboards, scenario visualization
-└── evaluation/          # Metrics, benchmarks, experiment utilities
+assets/demo.gif
+assets/demo.mp4
+assets/trajectory_prediction.png
+assets/interaction_graph.png
+assets/risk_overlay.png
+assets/confusion_matrix.png
+assets/roc_curve.png
+assets/precision_recall_curve.png
+assets/calibration_curve.png
 ```
 
-## Candidate Datasets
+These are intended for scientific communication. They are not decorative and should not be interpreted as benchmark evidence unless produced from a documented experiment.
 
-The platform is designed to support public datasets relevant to autonomous driving, intelligent intersections, and multi-agent trajectory prediction, such as:
+---
 
-- INTERACTION Dataset
-- inD Dataset
-- rounD Dataset
-- highD Dataset
-- Argoverse 2 Motion Forecasting
-- nuScenes
-- Waymo Open Motion Dataset
-- V2X and infrastructure-based cooperative perception datasets
+## Documentation
 
-## Technology Stack
+- [`docs/RESEARCH_OVERVIEW.md`](docs/RESEARCH_OVERVIEW.md)
+- [`docs/SYSTEM_ARCHITECTURE.md`](docs/SYSTEM_ARCHITECTURE.md)
+- [`docs/PIPELINE.md`](docs/PIPELINE.md)
+- [`docs/DATASETS.md`](docs/DATASETS.md)
+- [`docs/EVALUATION_PROTOCOL.md`](docs/EVALUATION_PROTOCOL.md)
+- [`docs/ROADMAP.md`](docs/ROADMAP.md)
+- [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
+- [`docs/VISUALIZATION.md`](docs/VISUALIZATION.md)
 
-- Python
-- PyTorch
-- PyTorch Geometric
-- NumPy / pandas
-- OpenCV
-- ROS 2
-- CARLA
-- SUMO
-- Docker
-- FastAPI or Streamlit for demos
-- Matplotlib / Plotly for visualization
+---
 
-## Initial Milestones
+## Publication Roadmap
 
-1. Define the research scope and system architecture.
-2. Implement baseline trajectory prediction models.
-3. Add dataset preprocessing for intersection-based trajectory datasets.
-4. Implement social interaction modeling and safety metrics.
-5. Build a minimal visualization dashboard.
-6. Extend the project with graph-based and transformer-based models.
-7. Create a simulation-based smart intersection digital twin.
-8. Prepare results for a conference or journal submission.
+1. Establish reproducible synthetic and public-dataset baselines.
+2. Add interaction-aware prediction models.
+3. Add uncertainty calibration and risk estimation.
+4. Validate conflict detection metrics on public intersection datasets.
+5. Prepare a workshop or conference submission only after reproducible results exist.
 
-## Example Research Questions
+Potential venues, depending on maturity and results: ICRA, IROS, RSS workshops, IV, ITSC, CVPR/ECCV autonomous-driving workshops.
 
-- How can infrastructure-based perception improve VRU trajectory prediction compared with vehicle-only perception?
-- Which interaction representations are most effective for predicting pedestrian and cyclist motion at intersections?
-- How can uncertainty-aware prediction improve safety-critical decision support?
-- Can graph neural networks model complex interactions between VRUs, vehicles, traffic lights, and road geometry?
-- How can digital twins support the evaluation of rare but dangerous traffic conflicts?
-
-## Status
-
-This repository is at the initial research-platform stage. The first objective is to establish a clean, reproducible foundation for experiments in VRU trajectory prediction and intelligent intersection safety.
+---
 
 ## Citation
 
-If you use this project in academic work, please cite the repository once a formal publication or preprint becomes available.
+If you use this repository, cite it with the metadata in [`CITATION.cff`](CITATION.cff). A formal paper citation will be added only after a manuscript or preprint exists.
+
+---
 
 ## License
 
-This project is released under the MIT License unless otherwise specified.
+MIT License unless otherwise stated. Dataset licenses remain with their original providers.
+
+---
+
+## Acknowledgements
+
+This repository is developed as an academic research portfolio project on AI for intelligent intersections, vulnerable road-user safety, and robust autonomous mobility. It is inspired by open, reproducible research practices in robotics, computer vision, and intelligent transportation systems.
