@@ -12,6 +12,15 @@ Predicts future 2D positions by extrapolating the last observed displacement.
 - Output: prediction with shape `(horizon, 2)`.
 - Status: **Implemented baseline**.
 
+### `safecrossai.prediction.linear.linear_regression_predict(history, horizon)`
+
+Predicts future 2D positions by fitting independent least-squares linear models to the observed x and y coordinates over time.
+
+- Input: `history` with shape `(T, 2)`.
+- Output: prediction with shape `(horizon, 2)`.
+- Status: **Implemented baseline**.
+- Scientific role: deterministic sanity-check baseline that uses the full observed history and can be compared against constant velocity before introducing learned models.
+
 ## Datasets
 
 ### `safecrossai.datasets.toy.make_linear_crossing_sample(...)`
