@@ -9,26 +9,52 @@ def test_ind_scene_summary_cli(tmp_path: Path, capsys) -> None:
     csv_path = tmp_path / "tracks.csv"
     pd.DataFrame(
         [
-            {"trackId": 1, "frame": 0, "xCenter": 0.0, "yCenter": 0.0, "class": "pedestrian"},
-            {"trackId": 2, "frame": 0, "xCenter": 1.0, "yCenter": 0.0, "class": "bicycle"},
-            {"trackId": 1, "frame": 1, "xCenter": 0.5, "yCenter": 0.0, "class": "pedestrian"},
-            {"trackId": 1, "frame": 2, "xCenter": 1.0, "yCenter": 0.0, "class": "pedestrian"},
+            {
+                "trackId": 1,
+                "frame": 0,
+                "xCenter": 0.0,
+                "yCenter": 0.0,
+                "class": "pedestrian",
+            },
+            {
+                "trackId": 2,
+                "frame": 0,
+                "xCenter": 1.0,
+                "yCenter": 0.0,
+                "class": "bicycle",
+            },
+            {
+                "trackId": 1,
+                "frame": 1,
+                "xCenter": 0.5,
+                "yCenter": 0.0,
+                "class": "pedestrian",
+            },
+            {
+                "trackId": 1,
+                "frame": 2,
+                "xCenter": 1.0,
+                "yCenter": 0.0,
+                "class": "pedestrian",
+            },
         ]
     ).to_csv(csv_path, index=False)
 
-    _run_cli([
-        "ind-scene-summary",
-        str(csv_path),
-        "--radius",
-        "2.0",
-        "--sequence-length",
-        "2",
-        "--stride",
-        "1",
-        "--classes",
-        "pedestrian",
-        "bicycle",
-    ])
+    _run_cli(
+        [
+            "ind-scene-summary",
+            str(csv_path),
+            "--radius",
+            "2.0",
+            "--sequence-length",
+            "2",
+            "--stride",
+            "1",
+            "--classes",
+            "pedestrian",
+            "bicycle",
+        ]
+    )
 
     output = capsys.readouterr().out
     assert "scenes: 3" in output
