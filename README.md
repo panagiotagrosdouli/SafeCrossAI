@@ -12,7 +12,7 @@
   <img src="assets/architecture_placeholder.svg" alt="SafeCrossAI architecture placeholder" width="760" />
 </p>
 
-> **Scientific honesty statement.** SafeCrossAI is an early research platform. It currently implements a deterministic trajectory baseline, toy trajectory generation, social-interaction utilities, interaction graph construction, time-to-collision / closest-approach reasoning, and risk/visualization scaffolding. It does **not** claim state-of-the-art performance, real-world deployment, or completed benchmark results. Neural predictors, public dataset loaders, infrastructure-perception models, and large-scale evaluation are marked as **Prototype** or **Planned** until implemented and validated.
+> **Scientific honesty statement.** SafeCrossAI is an early research platform. It currently implements deterministic trajectory baselines, toy trajectory generation, social-interaction utilities, interaction graph construction, time-to-collision / closest-approach reasoning, and risk/visualization scaffolding. It does **not** claim state-of-the-art performance, real-world deployment, or completed benchmark results. Neural predictors, public dataset loaders, infrastructure-perception models, and large-scale evaluation are marked as **Prototype** or **Planned** until implemented and validated.
 
 ---
 
@@ -40,6 +40,7 @@ This repository currently supports this hypothesis only at the **scaffold and ba
 
 - Synthetic toy trajectory generation for controlled smoke tests.
 - Constant-velocity trajectory prediction baseline.
+- Least-squares linear trajectory prediction baseline.
 - ADE and FDE metrics for trajectory prediction.
 - Social-agent representation for multi-agent traffic scenes.
 - Radius-based and k-nearest-neighbor search.
@@ -55,7 +56,7 @@ This repository currently supports this hypothesis only at the **scaffold and ba
 - Extended evaluation metrics: miss rate, precision, recall, F1, confusion matrix, ROC, precision-recall, and calibration helpers.
 - Reproducible demo scenario generation.
 - Visualization utilities for trajectories, interaction graphs, risk overlays, and GIF/MP4 generation.
-- Documentation for research overview, architecture, datasets, evaluation, roadmap, API, and visualization.
+- Documentation for research overview, architecture, datasets, evaluation, roadmap, API, visualization, audit, and implementation policy.
 - CI, formatting, testing, and pre-commit configuration scaffolds.
 
 ### Prototype / Planned
@@ -81,7 +82,7 @@ Perception and Tracking              [Prototype]
 Scene Representation                  [Implemented scaffold]
         |
         v
-Trajectory Prediction                 [Constant Velocity implemented; learned models planned]
+Trajectory Prediction                 [Constant Velocity + Linear baselines implemented; learned models planned]
         |
         v
 Interaction Graph                     [Implemented]
@@ -134,8 +135,13 @@ The demo uses a synthetic scenario only. It is designed to verify the pipeline a
 import numpy as np
 
 from safecrossai.prediction.baseline import constant_velocity_predict
+from safecrossai.prediction.linear import linear_regression_predict
 from safecrossai.risk import RiskConfig, assess_pairwise_risk
 from safecrossai.social import SocialAgent
+
+history = np.array([[0.0, 0.0], [1.0, 0.5], [2.0, 1.0]])
+cv_prediction = constant_velocity_predict(history, horizon=3)
+linear_prediction = linear_regression_predict(history, horizon=3)
 
 pedestrian = SocialAgent(
     agent_id="pedestrian_1",
@@ -174,10 +180,10 @@ SafeCrossAI/
 ├── tests/                   # Unit tests and regression tests
 ├── benchmarks/              # Benchmark scripts and templates
 ├── results/                 # Generated outputs; no fake results committed
-├── website/                 # Future research-project website scaffold
-└── src/safecrossai/
+├── website/                 # Research-project website scaffold
+└── src/safecrossai/         # Installable Python package using the src-layout
     ├── datasets/            # Synthetic and future real dataset loaders
-    ├── prediction/          # Baselines and future learned predictors
+    ├── prediction/          # Deterministic baselines and future learned predictors
     ├── social/              # Interaction geometry and graph construction
     ├── risk/                # TTC/CPA/conflict risk scoring
     ├── perception/          # Prototype perception interfaces
@@ -186,6 +192,8 @@ SafeCrossAI/
     ├── simulation/          # Future CARLA/SUMO integration
     └── utils/               # Configuration, logging, and shared helpers
 ```
+
+The repository uses the standard Python `src/` layout for packaging hygiene. The import name remains `safecrossai`.
 
 ---
 
@@ -208,7 +216,7 @@ Core metrics include ADE, FDE, miss rate, precision, recall, F1, confusion matri
 The generated demo should show:
 
 1. observed agent trajectories,
-2. constant-velocity future predictions,
+2. constant-velocity or linear future predictions,
 3. interaction edges,
 4. time-to-collision / closest-approach information,
 5. risk overlays.
@@ -241,6 +249,8 @@ These are intended for scientific communication. They are not decorative and sho
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md)
 - [`docs/VISUALIZATION.md`](docs/VISUALIZATION.md)
+- [`docs/IMPLEMENTATION_POLICY.md`](docs/IMPLEMENTATION_POLICY.md)
+- [`docs/REPOSITORY_AUDIT.md`](docs/REPOSITORY_AUDIT.md)
 
 ---
 
