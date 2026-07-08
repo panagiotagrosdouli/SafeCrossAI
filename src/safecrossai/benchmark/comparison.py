@@ -82,7 +82,12 @@ def compare_with_train_test_split(
 ) -> list[BenchmarkRow]:
     """Compare baselines using train samples for LSTM and test samples for evaluation."""
     split = train_test_split_samples(samples, test_fraction=test_fraction, seed=seed)
-    return _compare_on_split(split.train, split.test, lstm_epochs=lstm_epochs, hidden_dim=hidden_dim)
+    return _compare_on_split(
+        split.train,
+        split.test,
+        lstm_epochs=lstm_epochs,
+        hidden_dim=hidden_dim,
+    )
 
 
 def compare_with_grouped_train_test_split(
@@ -99,7 +104,12 @@ def compare_with_grouped_train_test_split(
         test_fraction=test_fraction,
         seed=seed,
     )
-    return _compare_on_split(split.train, split.test, lstm_epochs=lstm_epochs, hidden_dim=hidden_dim)
+    return _compare_on_split(
+        split.train,
+        split.test,
+        lstm_epochs=lstm_epochs,
+        hidden_dim=hidden_dim,
+    )
 
 
 def _compare_on_split(
