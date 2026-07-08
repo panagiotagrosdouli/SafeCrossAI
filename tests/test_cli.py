@@ -31,14 +31,16 @@ def test_csv_baseline_cli(tmp_path: Path, capsys) -> None:
         )
     pd.DataFrame(rows).to_csv(csv_path, index=False)
 
-    _run_cli([
-        "csv-baseline",
-        str(csv_path),
-        "--observation-steps",
-        "3",
-        "--prediction-steps",
-        "2",
-    ])
+    _run_cli(
+        [
+            "csv-baseline",
+            str(csv_path),
+            "--observation-steps",
+            "3",
+            "--prediction-steps",
+            "2",
+        ]
+    )
 
     output = capsys.readouterr().out
     assert "samples: 2" in output
@@ -47,17 +49,19 @@ def test_csv_baseline_cli(tmp_path: Path, capsys) -> None:
 
 
 def test_toy_benchmark_cli(capsys) -> None:
-    _run_cli([
-        "toy-benchmark",
-        "--observation-steps",
-        "4",
-        "--prediction-steps",
-        "3",
-        "--lstm-epochs",
-        "1",
-        "--hidden-dim",
-        "8",
-    ])
+    _run_cli(
+        [
+            "toy-benchmark",
+            "--observation-steps",
+            "4",
+            "--prediction-steps",
+            "3",
+            "--lstm-epochs",
+            "1",
+            "--hidden-dim",
+            "8",
+        ]
+    )
 
     output = capsys.readouterr().out
     assert "| Model | Samples | Mean ADE | Mean FDE |" in output
@@ -80,18 +84,20 @@ def test_ind_benchmark_cli(tmp_path: Path, capsys) -> None:
         )
     pd.DataFrame(rows).to_csv(csv_path, index=False)
 
-    _run_cli([
-        "ind-benchmark",
-        str(csv_path),
-        "--observation-steps",
-        "3",
-        "--prediction-steps",
-        "2",
-        "--lstm-epochs",
-        "1",
-        "--hidden-dim",
-        "8",
-    ])
+    _run_cli(
+        [
+            "ind-benchmark",
+            str(csv_path),
+            "--observation-steps",
+            "3",
+            "--prediction-steps",
+            "2",
+            "--lstm-epochs",
+            "1",
+            "--hidden-dim",
+            "8",
+        ]
+    )
 
     output = capsys.readouterr().out
     assert "| Model | Samples | Mean ADE | Mean FDE |" in output
@@ -115,21 +121,23 @@ def test_ind_train_test_benchmark_cli(tmp_path: Path, capsys) -> None:
             )
     pd.DataFrame(rows).to_csv(csv_path, index=False)
 
-    _run_cli([
-        "ind-benchmark",
-        str(csv_path),
-        "--observation-steps",
-        "3",
-        "--prediction-steps",
-        "2",
-        "--train-test",
-        "--test-fraction",
-        "0.5",
-        "--lstm-epochs",
-        "1",
-        "--hidden-dim",
-        "8",
-    ])
+    _run_cli(
+        [
+            "ind-benchmark",
+            str(csv_path),
+            "--observation-steps",
+            "3",
+            "--prediction-steps",
+            "2",
+            "--train-test",
+            "--test-fraction",
+            "0.5",
+            "--lstm-epochs",
+            "1",
+            "--hidden-dim",
+            "8",
+        ]
+    )
 
     output = capsys.readouterr().out
     assert "| Model | Samples | Mean ADE | Mean FDE |" in output
@@ -153,21 +161,23 @@ def test_ind_grouped_split_benchmark_cli(tmp_path: Path, capsys) -> None:
             )
     pd.DataFrame(rows).to_csv(csv_path, index=False)
 
-    _run_cli([
-        "ind-benchmark",
-        str(csv_path),
-        "--observation-steps",
-        "3",
-        "--prediction-steps",
-        "2",
-        "--grouped-split",
-        "--test-fraction",
-        "0.5",
-        "--lstm-epochs",
-        "1",
-        "--hidden-dim",
-        "8",
-    ])
+    _run_cli(
+        [
+            "ind-benchmark",
+            str(csv_path),
+            "--observation-steps",
+            "3",
+            "--prediction-steps",
+            "2",
+            "--grouped-split",
+            "--test-fraction",
+            "0.5",
+            "--lstm-epochs",
+            "1",
+            "--hidden-dim",
+            "8",
+        ]
+    )
 
     output = capsys.readouterr().out
     assert "| Model | Samples | Mean ADE | Mean FDE |" in output
