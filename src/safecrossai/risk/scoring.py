@@ -100,8 +100,15 @@ def conflict_score(
     """Compute a baseline conflict score in [0, 1]."""
     current_distance_component = distance_risk(distance_m, config.distance_horizon_m)
     ttc_component = ttc_risk(ttc_seconds, config.ttc_horizon_s)
-    closest_component = distance_risk(max(closest_approach_distance_m, 0.0), config.distance_horizon_m)
-    return _clip01(0.50 * ttc_component + 0.30 * closest_component + 0.20 * current_distance_component)
+    closest_component = distance_risk(
+        max(closest_approach_distance_m, 0.0),
+        config.distance_horizon_m,
+    )
+    return _clip01(
+        0.50 * ttc_component
+        + 0.30 * closest_component
+        + 0.20 * current_distance_component
+    )
 
 
 def _level_from_score(score: float, config: RiskConfig) -> RiskLevel:
@@ -114,7 +121,11 @@ def _level_from_score(score: float, config: RiskConfig) -> RiskLevel:
     return RiskLevel.LOW
 
 
-def assess_pairwise_risk(source: SocialAgent, target: SocialAgent, config: RiskConfig) -> PairwiseRiskReport:
+def assess_pairwise_risk(
+    source: SocialAgent,
+    target: SocialAgent,
+    config: RiskConfig,
+) -> PairwiseRiskReport:
     """Assess pairwise interaction risk between two agents."""
     source_position = np.asarray(source.position, dtype=float)
     target_position = np.asarray(target.position, dtype=float)
@@ -133,7 +144,12 @@ def assess_pairwise_risk(source: SocialAgent, target: SocialAgent, config: RiskC
             target_velocity,
             collision_radius=config.interaction_radius_m,
         )
-        approach = closest_point_of_approach(source_position, source_velocity, target_position, target_velocity)
+        approach = closest_point_of_approach(
+            source_position,
+            source_velocity,
+            target_position,
+            target_velocity,
+        )
         closest_time = approach.time
         closest_distance = approach.distance
     else:
