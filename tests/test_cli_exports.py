@@ -8,23 +8,25 @@ def test_toy_benchmark_cli_writes_exports(tmp_path: Path) -> None:
     json_path = tmp_path / "results.json"
     md_path = tmp_path / "results.md"
 
-    _run_cli([
-        "toy-benchmark",
-        "--observation-steps",
-        "4",
-        "--prediction-steps",
-        "3",
-        "--lstm-epochs",
-        "1",
-        "--hidden-dim",
-        "8",
-        "--output-csv",
-        str(csv_path),
-        "--output-json",
-        str(json_path),
-        "--output-md",
-        str(md_path),
-    ])
+    _run_cli(
+        [
+            "toy-benchmark",
+            "--observation-steps",
+            "4",
+            "--prediction-steps",
+            "3",
+            "--lstm-epochs",
+            "1",
+            "--hidden-dim",
+            "8",
+            "--output-csv",
+            str(csv_path),
+            "--output-json",
+            str(json_path),
+            "--output-md",
+            str(md_path),
+        ]
+    )
 
     assert csv_path.exists()
     assert json_path.exists()
