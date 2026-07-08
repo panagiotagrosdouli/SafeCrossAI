@@ -31,7 +31,11 @@ def test_grouped_train_test_split_keeps_groups_separate() -> None:
         Item(value=6, group="c"),
     ]
 
-    split = grouped_train_test_split_samples(samples, group_fn=lambda item: item.group, seed=1)
+    split = grouped_train_test_split_samples(
+        samples,
+        group_fn=lambda item: item.group,
+        seed=1,
+    )
 
     train_groups = {item.group for item in split.train}
     test_groups = {item.group for item in split.test}
