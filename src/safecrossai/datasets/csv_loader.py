@@ -50,7 +50,9 @@ def build_samples_from_csv(
             continue
 
         positions = group[["x", "y"]].to_numpy(dtype=float)
-        agent_type = str(group["agent_type"].iloc[0]) if "agent_type" in group else "pedestrian"
+        agent_type = (
+            str(group["agent_type"].iloc[0]) if "agent_type" in group else "pedestrian"
+        )
 
         for start in range(0, len(positions) - window + 1):
             segment = positions[start : start + window]
