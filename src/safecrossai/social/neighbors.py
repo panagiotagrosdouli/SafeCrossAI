@@ -66,6 +66,11 @@ def k_nearest_neighbors(
     for agent in agents:
         if agent.agent_id == target.agent_id:
             continue
-        neighbors.append(Neighbor(agent=agent, distance=distance(target.position, agent.position)))
+        neighbors.append(
+            Neighbor(
+                agent=agent,
+                distance=distance(target.position, agent.position),
+            )
+        )
 
     return sorted(neighbors, key=lambda item: (item.distance, item.agent.agent_id))[:k]
