@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from safecrossai.models.outputs import PredictionOutput
 
@@ -30,5 +31,5 @@ class TrajectoryPredictor(ABC):
 
     @classmethod
     @abstractmethod
-    def load(cls, path: str | Path) -> "TrajectoryPredictor":
+    def load(cls, path: str | Path) -> TrajectoryPredictor:
         """Load predictor state from disk."""
