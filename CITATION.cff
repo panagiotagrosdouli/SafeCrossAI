@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: "SafeCrossAI: Intelligent-Intersection Trajectory Prediction and Interaction-Risk Research Scaffold"
+message: "If you use this research software, please cite it using this metadata until a formal paper is available."
+type: software
+authors:
+  - family-names: Grosdouli
+    given-names: Panagiota
+year: 2026
+repository-code: "https://github.com/panagiotagrosdouli/SafeCrossAI"
+license: MIT
+keywords:
+  - vulnerable road users
+  - trajectory prediction
+  - intelligent intersections
+  - interaction graphs
+  - risk estimation
+  - autonomous mobility
