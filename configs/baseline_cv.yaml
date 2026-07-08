@@ -1,0 +1,19 @@
+experiment:
+  name: constant_velocity_synthetic_smoke_test
+  synthetic: true
+  benchmark: false
+
+trajectory:
+  observation_steps: 8
+  prediction_steps: 12
+  velocity: [0.5, 0.2]
+
+model:
+  name: constant_velocity
+
+metrics:
+  - ADE
+  - FDE
+
+reporting:
+  note: "Synthetic smoke test only. Do not report as benchmark performance."
