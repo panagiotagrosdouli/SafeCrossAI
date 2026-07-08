@@ -11,7 +11,11 @@ def minimum_distance(agent_a: np.ndarray, agent_b: np.ndarray) -> float:
     return float(np.linalg.norm(agent_a - agent_b, axis=1).min())
 
 
-def simple_conflict_score(agent_a: np.ndarray, agent_b: np.ndarray, safety_distance: float = 2.0) -> float:
+def simple_conflict_score(
+    agent_a: np.ndarray,
+    agent_b: np.ndarray,
+    safety_distance: float = 2.0,
+) -> float:
     """Return a normalized conflict score based on minimum distance.
 
     The score is 0 when the trajectories remain outside the safety distance and
