@@ -66,7 +66,10 @@ def time_to_collision(
         return None
 
     sqrt_discriminant = float(np.sqrt(discriminant))
-    roots = [(-b - sqrt_discriminant) / (2.0 * a), (-b + sqrt_discriminant) / (2.0 * a)]
+    roots = [
+        (-b - sqrt_discriminant) / (2.0 * a),
+        (-b + sqrt_discriminant) / (2.0 * a),
+    ]
     future_roots = [root for root in roots if root >= 0.0]
     if not future_roots:
         return None
