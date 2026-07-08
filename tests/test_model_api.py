@@ -1,5 +1,6 @@
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 
@@ -21,7 +22,7 @@ class DummyPredictor(TrajectoryPredictor):
         Path(path).write_text("dummy", encoding="utf-8")
 
     @classmethod
-    def load(cls, path: str | Path) -> "DummyPredictor":
+    def load(cls, path: str | Path) -> DummyPredictor:
         Path(path).read_text(encoding="utf-8")
         return cls()
 
