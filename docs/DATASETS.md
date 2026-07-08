@@ -1,10 +1,24 @@
 # Datasets
 
-SafeCrossAI is designed to support multiple trajectory-prediction datasets through a common internal format.
+SafeCrossAI currently includes only synthetic toy and demo scenarios. These are useful for smoke tests, examples, and visualization, but they are not benchmark datasets.
+
+## Current Data
+
+### Synthetic toy trajectory
+
+Status: **Implemented**
+
+Used for deterministic baseline testing.
+
+### Synthetic demo scenario
+
+Status: **Implemented**
+
+Used for GIF/MP4 demo generation and visualization smoke tests.
 
 ## Common CSV Format
 
-The simplest supported format is a CSV file with the following columns:
+The simplest planned interchange format is a CSV file with the following columns:
 
 | Column | Required | Description |
 |---|---:|---|
@@ -15,34 +29,32 @@ The simplest supported format is a CSV file with the following columns:
 | `y` | yes | Local y coordinate in meters or normalized map units. |
 | `agent_type` | no | Road-user class, for example `pedestrian`, `cyclist`, `vehicle`, or `escooter`. |
 
-## Example
+## Planned Public Datasets
 
-```csv
-scene_id,agent_id,frame,x,y,agent_type
-1,10,0,0.0,0.0,pedestrian
-1,10,1,0.5,0.2,pedestrian
-1,10,2,1.0,0.4,pedestrian
-1,10,3,1.5,0.6,pedestrian
-1,10,4,2.0,0.8,pedestrian
-```
+The following datasets are relevant to the research direction but are not yet implemented as loaders:
 
-## Windowing
+- inD Dataset
+- rounD Dataset
+- highD Dataset
+- INTERACTION Dataset
+- Argoverse 2 Motion Forecasting
+- Waymo Open Motion Dataset
+- nuScenes prediction-related data
+- V2X and infrastructure-perception datasets
 
-A trajectory is converted into samples using two parameters:
+## Dataset Loader Requirements
 
-- `observation_steps`: number of past positions given to the model.
-- `prediction_steps`: number of future positions the model must predict.
+Each loader must document:
 
-For example, with `observation_steps=8` and `prediction_steps=12`, each sample contains 20 consecutive positions.
-
-## Planned Dataset Adapters
-
-- `inD`: intersection drone-based road-user trajectories.
-- `rounD`: roundabout road-user trajectories.
-- `INTERACTION`: interaction-rich driving scenarios.
-- `Argoverse 2 Motion Forecasting`: autonomous-driving motion forecasting.
-- `nuScenes`: autonomous-driving dataset with perception and tracking context.
-- `Waymo Open Motion Dataset`: large-scale motion forecasting benchmark.
+- dataset source;
+- license and citation;
+- coordinate frame;
+- sampling rate;
+- agent types;
+- map context availability;
+- official splits if available;
+- preprocessing steps;
+- limitations.
 
 ## Data Policy
 
@@ -55,3 +67,7 @@ data/processed/
 ```
 
 Only lightweight examples, schemas, and preprocessing code should be committed.
+
+## No Fictional Datasets
+
+This repository must not invent dataset names or report results on unavailable data. Synthetic scenarios must always be labelled synthetic.
