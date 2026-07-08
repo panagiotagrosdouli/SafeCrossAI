@@ -62,8 +62,7 @@ src = ["src", "tests", "scripts"]
 target-version = "py310"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "PL"]
-ignore = ["PLR0913"]
+select = ["E", "F", "I", "B", "UP"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
