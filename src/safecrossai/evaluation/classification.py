@@ -71,7 +71,11 @@ def miss_rate(prediction: np.ndarray, target: np.ndarray, threshold: float) -> f
     return float((errors > threshold).mean())
 
 
-def roc_curve_points(y_true: np.ndarray, scores: np.ndarray, num_thresholds: int = 101) -> tuple[np.ndarray, np.ndarray]:
+def roc_curve_points(
+    y_true: np.ndarray,
+    scores: np.ndarray,
+    num_thresholds: int = 101,
+) -> tuple[np.ndarray, np.ndarray]:
     """Return false-positive and true-positive rates for thresholds in [0, 1]."""
     truth = _as_bool_array(y_true)
     score_array = np.asarray(scores, dtype=float)
@@ -128,7 +132,10 @@ def expected_calibration_error(
     edges = np.linspace(0.0, 1.0, num_bins + 1)
     ece = 0.0
     for lower, upper in zip(edges[:-1], edges[1:]):
-        mask = (probs >= lower) & (probs < upper if upper < 1.0 else probs <= upper)
+        if upper < 1.0:
+            mask = (probs >= lower) & (probs < upper)
+        else:
+            mask = (probs >= lower) & (probs <= upper)
         if not np.any(mask):
             continue
         confidence = float(probs[mask].mean())
