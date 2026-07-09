@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 
-from safecrossai.datasets.splitting import grouped_train_test_split_samples, train_test_split_samples
+from safecrossai.datasets.splitting import (
+    grouped_train_test_split_samples,
+    train_test_split_samples,
+)
 
 
 @dataclass(frozen=True)
