@@ -4,10 +4,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from safecrossai.datasets.splitting import grouped_train_test_split_samples, train_test_split_samples
+from safecrossai.datasets.splitting import (
+    grouped_train_test_split_samples,
+    train_test_split_samples,
+)
 from safecrossai.datasets.toy import TrajectorySample
 from safecrossai.evaluation.lstm import evaluate_lstm_model
-from safecrossai.evaluation.metrics import average_displacement_error, final_displacement_error
+from safecrossai.evaluation.metrics import (
+    average_displacement_error,
+    final_displacement_error,
+)
 from safecrossai.prediction.baseline import constant_velocity_predict
 from safecrossai.training.loops import fit_lstm_baseline
 
