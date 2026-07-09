@@ -10,7 +10,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from safecrossai.simulation import SyntheticIntersectionSimulator
 
-
 if __name__ == "__main__":
     summary = SyntheticIntersectionSimulator().run("results")
     print(summary)
