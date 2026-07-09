@@ -70,7 +70,13 @@ class LinearAgent:
         )
 
 
-def _ttc(p1: np.ndarray, v1: np.ndarray, p2: np.ndarray, v2: np.ndarray, radius: float = 1.5) -> float:
+def _ttc(
+    p1: np.ndarray,
+    v1: np.ndarray,
+    p2: np.ndarray,
+    v2: np.ndarray,
+    radius: float = 1.5,
+) -> float:
     rel_p = p2 - p1
     rel_v = v2 - v1
     a = float(rel_v @ rel_v)
@@ -81,12 +87,20 @@ def _ttc(p1: np.ndarray, v1: np.ndarray, p2: np.ndarray, v2: np.ndarray, radius:
     disc = b * b - 4.0 * a * c
     if disc < 0.0:
         return math.inf
-    roots = [(-b - math.sqrt(disc)) / (2.0 * a), (-b + math.sqrt(disc)) / (2.0 * a)]
+    roots = [
+        (-b - math.sqrt(disc)) / (2.0 * a),
+        (-b + math.sqrt(disc)) / (2.0 * a),
+    ]
     positive = [root for root in roots if root >= 0.0]
     return min(positive) if positive else math.inf
 
 
-def _cpa(p1: np.ndarray, v1: np.ndarray, p2: np.ndarray, v2: np.ndarray) -> tuple[float, float]:
+def _cpa(
+    p1: np.ndarray,
+    v1: np.ndarray,
+    p2: np.ndarray,
+    v2: np.ndarray,
+) -> tuple[float, float]:
     rel_p = p2 - p1
     rel_v = v2 - v1
     denom = float(rel_v @ rel_v)
@@ -141,7 +155,11 @@ def _edges(observed: pd.DataFrame) -> pd.DataFrame:
                 + 0.30 * ttc_term
                 + 0.20 * max(0.0, 1.0 - cpa_distance / 8.0),
             )
-            level = "CRITICAL" if score >= 0.75 else "HIGH" if score >= 0.55 else "MEDIUM" if score >= 0.30 else "LOW"
+            level = (
+                "CRITICAL"
+                if score >= 0.75
+                else "HIGH" if score >= 0.55 else "MEDIUM" if score >= 0.30 else "LOW"
+            )
             rows.append(
                 {
                     "source_agent": source["agent_id"],
@@ -184,7 +202,13 @@ def _metrics(predicted: pd.DataFrame, ground_truth: pd.DataFrame) -> pd.DataFram
 class SyntheticIntersectionSimulator:
     """Run a deterministic synthetic intelligent-intersection scenario."""
 
-    def __init__(self, seed: int = 7, dt: float = 0.5, observed_steps: int = 8, future_steps: int = 12):
+    def __init__(
+        self,
+        seed: int = 7,
+        dt: float = 0.5,
+        observed_steps: int = 8,
+        future_steps: int = 12,
+    ):
         self.seed = seed
         self.dt = dt
         self.observed_steps = observed_steps
@@ -244,7 +268,9 @@ class SyntheticIntersectionSimulator:
         for name, frame in outputs.items():
             frame.to_csv(output / name, index=False)
         metrics.to_csv(output / "metrics" / "metrics.csv", index=False)
-        (output / "metrics" / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+        (output / "metrics" / "summary.json").write_text(
+            json.dumps(summary, indent=2), encoding="utf-8"
+        )
         (output / "scene_metadata.json").write_text(
             json.dumps(
                 {
@@ -257,7 +283,9 @@ class SyntheticIntersectionSimulator:
             ),
             encoding="utf-8",
         )
-        (output / "simulation_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+        (output / "simulation_summary.json").write_text(
+            json.dumps(summary, indent=2), encoding="utf-8"
+        )
         (output / "reports" / "synthetic_demo_report.md").write_text(
             "# Synthetic Demo Report\n\nAll reported numbers are produced from deterministic synthetic trajectories.\n",
             encoding="utf-8",
