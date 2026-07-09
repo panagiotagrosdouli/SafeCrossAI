@@ -105,9 +105,7 @@ def conflict_score(
         config.distance_horizon_m,
     )
     return _clip01(
-        0.50 * ttc_component
-        + 0.30 * closest_component
-        + 0.20 * current_distance_component
+        0.50 * ttc_component + 0.30 * closest_component + 0.20 * current_distance_component
     )
 
 
