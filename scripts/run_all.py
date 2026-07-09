@@ -12,6 +12,7 @@ COMMANDS = [
     ["scripts/run_synthetic_demo.py"],
     ["scripts/generate_figures.py", "--output-dir", "results/figures"],
     ["scripts/make_demo_gif.py", "--frames-dir", "results/videos/frames", "--output", "results/videos/safecrossai_demo.gif", "--mp4", "results/videos/safecrossai_demo.mp4"],
+    ["scripts/run_benchmarks.py"],
 ]
 
 
@@ -27,7 +28,7 @@ def main() -> None:
         shutil.copy2("results/videos/safecrossai_demo.gif", "assets/gifs/demo.gif")
     if Path("results/videos/safecrossai_demo.mp4").exists():
         shutil.copy2("results/videos/safecrossai_demo.mp4", "assets/videos/demo.mp4")
-    print("SafeCrossAI complete: Synthetic Demo metrics, figures, demo.gif, and demo.mp4 generated from code.")
+    print("SafeCrossAI complete: Synthetic Demo metrics, figures, demo.gif, demo.mp4, and benchmark report generated from code.")
 
 
 if __name__ == "__main__":
