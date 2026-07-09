@@ -2,7 +2,10 @@ import numpy as np
 
 from safecrossai.social import SocialAgent, make_scene
 from safecrossai.social.sequences import SceneSequence
-from safecrossai.social.temporal_features import extract_position_histories, sequence_to_temporal_tensor
+from safecrossai.social.temporal_features import (
+    extract_position_histories,
+    sequence_to_temporal_tensor,
+)
 
 
 def test_extract_position_histories_handles_missing_agents() -> None:
