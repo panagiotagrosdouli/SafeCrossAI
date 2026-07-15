@@ -77,8 +77,12 @@ def _ttc(
     v2: np.ndarray,
     radius: float = 1.5,
 ) -> float:
-    rel_p = p2 - p1
-    rel_v = v2 - v1
+    p1_array = np.asarray(p1, dtype=float)
+    v1_array = np.asarray(v1, dtype=float)
+    p2_array = np.asarray(p2, dtype=float)
+    v2_array = np.asarray(v2, dtype=float)
+    rel_p = p2_array - p1_array
+    rel_v = v2_array - v1_array
     a = float(rel_v @ rel_v)
     b = 2.0 * float(rel_p @ rel_v)
     c = float(rel_p @ rel_p) - radius**2
@@ -101,8 +105,12 @@ def _cpa(
     p2: np.ndarray,
     v2: np.ndarray,
 ) -> tuple[float, float]:
-    rel_p = p2 - p1
-    rel_v = v2 - v1
+    p1_array = np.asarray(p1, dtype=float)
+    v1_array = np.asarray(v1, dtype=float)
+    p2_array = np.asarray(p2, dtype=float)
+    v2_array = np.asarray(v2, dtype=float)
+    rel_p = p2_array - p1_array
+    rel_v = v2_array - v1_array
     denom = float(rel_v @ rel_v)
     t_star = 0.0 if denom < 1e-9 else max(0.0, -float(rel_p @ rel_v) / denom)
     return t_star, float(np.linalg.norm(rel_p + rel_v * t_star))
